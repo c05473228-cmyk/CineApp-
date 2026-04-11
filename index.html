@@ -410,25 +410,7 @@ color:red;
 
 
 
-  /* Para navegador (pantallas grandes) */
-.browser-mode .movie-card,
-.browser-mode .serie-card {
-  width: 180px;
-}
-
-.browser-mode .carousel {
-  justify-content: center;
-}
-
-/* Para móviles */
-.mobile .movie-card,
-.mobile .serie-card {
-  width: 140px;
-}
-
 </style>
-  <script src="https://pl28716779.profitablecpmratenetwork.com/a5/39/44/a539447ae414d825662f9c6683c8b41c.js"></script>
-
 </head>
 
 <body>
@@ -481,16 +463,10 @@ Iniciando
 
 </section>
 
-      
-
-
       <div class="card" data-title="Avatar"
       onclick="openPlayer('https://vimeus.com/e/movie?tmdb=83533&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40&theme=purple&loader=v2&overlay=v4&playUI=v3&epanel=v3&splash=v2')">
         <img src="https://images.justwatch.com/poster/336228225/s718/avatar-3.jpg">
       </div>
-
-
-
 
 <div class="card" data-title="sin piedad"
 onclick="openPlayer('https://vimeus.com/e/movie?tmdb=1236153&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40&theme=purple&loader=v2&overlay=v2&playUI=v3&epanel=v3&splash=v2')">
@@ -1394,45 +1370,6 @@ function closeSerie(){
 }
 
 </script>
-
-  <script>
-(function() {
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  const isWebView = /(wv|WebView)/i.test(navigator.userAgent);
-  const isBrowser = !isWebView;
-
-  // Agrega clases al body según el entorno
-  if (isMobile) {
-    document.body.classList.add("mobile");
-  } else {
-    document.body.classList.add("desktop");
-  }
-
-  if (isBrowser) {
-    document.body.classList.add("browser-mode");
-  }
-
-  // Ajustes específicos si es navegador
-  if (document.body.classList.contains("browser-mode")) {
-    // Ejemplo: aumentar tamaño de tarjetas
-    document.querySelectorAll(".movie-card, .serie-card").forEach(card => {
-      card.style.width = "180px";
-    });
-
-    // Ajustar reproductor
-    const player = document.querySelector("iframe, video");
-    if (player) {
-      player.style.maxWidth = "900px";
-      player.style.margin = "0 auto";
-      player.style.display = "block";
-    }
-
-    // Centrar contenido
-    document.body.style.maxWidth = "1200px";
-    document.body.style.margin = "auto";
-  }
-})();
-  </script>
 
 </body>
 </html>
