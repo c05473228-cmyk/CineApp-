@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineApp</title>
+
+<style>
+body{
+  margin:0;
+  background:#0b0b0f;
+  color:#fff;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+/* HEADER HBO */
+#header{
+  position:fixed;
+  top:0;
+  width:100%;
+  z-index:50;
+  padding:16px 24px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  background:linear-gradient(to bottom,rgba(0,0,0,.9),rgba(0,0,0,0));
+  transition:transform .35s;
+}
+
+#introCine{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+z-index:999999;
+font-family:Arial, sans-serif;
+}
+
+/* LOGO */
+
+.logoIntro{
+font-size:80px;
+font-weight:bold;
+color:white;
+letter-spacing:6px;
+}
+
+.logoIntro span{
+color:#7b3cff;
+}
+
+.series-section {
+  padding: 15px;
+  color: white;
+}
+
+.series-row {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+}
+
+.serie-card {
+  flex-shrink: 0;
+}
+
+.serie-card img {
+  width: 150px;   /* 🔥 CONTROL AQUÍ */
+  height: 220px;  /* 🔥 CONTROL AQUÍ */
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* MODAL */
+#serieModal {
+  display: none;
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:black;
+  z-index:9999;
+}
+
+.modal-content {
+  padding: 20px;
+  color:white;
+}
+
+.modal-content span {
+  font-size: 25px;
+  cursor: pointer;
+}
+
+/* BOTONES */
+.temporada-btn, .capitulo-btn {
+  display: inline-block;
+  padding: 8px 12px;
+  margin: 5px;
+  background: #222;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+
+
+
+
+
+.top10 {
+  padding: 20px;
+  color: white;
+}
+
+.top10 h2 {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+/* Carrusel */
+.top10-row {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+.top10-row::-webkit-scrollbar {
+  display: none;
+}
+
+/* Tarjeta */
+.top-card {
+  position: relative;
+  min-width: 130px;
+  flex-shrink: 0;
+}
+
+.top-card img {
+  border-radius: 14px;
+}
+
+/* Imagen PRO */
+.top-card img {
+  width: 130px;
+  height: 190px;
+  border-radius: 14px;
+  object-fit: cover;
+  position: relative;
+  z-index: 2;
+  transition: 0.3s;
+}
+
+/* Hover estilo Netflix */
+.top-card:hover img {
+  transform: scale(1.08);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+
+
+
+/* Sombra elegante */
+.top-card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  border-radius: 14px;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  z-index: 2;
+}
+
+
+.top-card {
+  position: relative;
+}
+
+/* IMAGEN abajo */
+.top-card img {
+  width: 150px;
+  height: 220px;
+  border-radius: 14px;
+  object-fit: cover;
+  position: relative;
+  z-index: 1; /* 🔥 más bajo */
+}
+
+
+
+.top10 {
+  background: rgba(255,255,255,0.02);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+}
+
+.top-number {
+  position: absolute;
+  bottom: -10px;
+  left: -5px;
+  font-size: 90px;
+  font-weight: 900;
+  color: transparent;
+  -webkit-text-stroke: 2px white;
+  text-shadow: 0 0 25px rgba(255,255,255,0.4);
+  z-index: 5;
+}
+
+/* Efecto glow */
+.rank::after {
+  content: attr(data-rank);
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: rgba(255,255,255,0.15);
+  filter: blur(8px);
+  z-index: -1;
+}
+
+/* PUNTO DE CARGA */
+
+.loadingDot{
+width:8px;
+height:8px;
+background:white;
+margin-top:25px;
+border-radius:50%;
+animation:dotMove 1s infinite;
+}
+
+/* TEXTO */
+
+.loadingText{
+color:#aaa;
+margin-top:15px;
+font-size:14px;
+letter-spacing:1px;
+}
+
+/* ANIMACION */
+
+@keyframes dotMove{
+
+0%{opacity:0;}
+
+50%{opacity:1;}
+
+100%{opacity:0;}
+
+}
+
+
+
+#playerOverlay{
+position:fixed;
+top:0;
+left:0;
+width:100vw;
+height:100vh;
+background:#000;
+display:none;
+z-index:99999;
+}
+
+.playerWrapper{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:95%;
+max-width:900px;
+aspect-ratio:16/9;
+}
+
+#playerFrame{
+width:100%;
+height:100%;
+border:none;
+}
+
+.playerClose{
+position:fixed;
+top:20px;
+left:20px;
+font-size:32px;
+color:white;
+cursor:pointer;
+background:rgba(0,0,0,.7);
+padding:8px 14px;
+border-radius:10px;
+}
+
+
+#logo{
+  font-size:24px;
+  font-weight:bold;
+  color:#7b2cff;
+}
+
+#search{
+  flex:1;
+  background:#1c1c22;
+  border:none;
+  border-radius:22px;
+  padding:12px 16px;
+  color:#fff;
+  font-size:15px;
+}
+
+/* HERO HBO GRANDE */
+.hero{
+  position:relative;
+  height:85vh;
+  min-height:520px;
+  overflow:hidden;
+}
+
+.hero img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to top,#0b0b0f 0%,rgba(0,0,0,0) 60%);
+}
+
+/* CONTENIDO */
+#content{
+  margin-top:-120px;
+  position:relative;
+  z-index:5;
+}
+
+
+
+.section{
+  padding-left:16px;
+  padding-right:16px;
+}
+
+
+.section h2{
+  margin:0 0 16px;
+  font-size:20px;
+}
+
+/* CARRUSEL HBO */
+.carousel{
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+  padding-bottom:10px;
+}
+
+.card{
+  min-width:100px;
+  width:150px;
+  height:220px; /* proporción poster cine */
+  border-radius:14px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform .25s;
+  background:#111;
+  flex-shrink:0;
+}
+
+.card:hover{
+  transform:scale(1.08);
+}
+
+.card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+
+.card{
+position:relative;
+}
+
+.favBtn{
+position:absolute;
+top:8px;
+right:8px;
+background:rgba(0,0,0,0.7);
+color:white;
+font-size:18px;
+padding:5px 8px;
+border-radius:50%;
+cursor:pointer;
+}
+
+.favActive{
+color:red;
+}
+
+
+
+</style>
+</head>
+
+<body>
+<div id="introCine">
+
+<div class="logoIntro">
+CineApp<span>+</span>
+</div>
+
+<div class="loadingDot"></div>
+
+<div class="loadingText">
+Iniciando
+</div>
+
+</div>
+
+<!-- HEADER -->
+<div id="header">
+  <div id="logo">CineApp</div>
+  <input id="search" placeholder="Buscar películas...">
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <img id="heroImg" src="https://image.tmdb.org/t/p/original/8rpDcsfLJypbO6vREc0547VKqEv.jpg">
+</div>
+
+<!-- CONTENIDO -->
+<div id="content">
+
+ <div id="searchResults" class="section" style="display:none;">
+  <h2>Resultados</h2>
+  <div class="carousel" id="resultsGrid"></div>
+</div>
+
+
+
+
+<div class="section">
+    <h2>Populares</h2>
+    <div class="carousel">
+
+      <div class="card" data-title="el guardian últimorefugio"
+      onclick="openPlayer('https://vimeus.com/e/movie?tmdb=1290821&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40&theme=purple&loader=v2&overlay=v2&playUI=v3&epanel=v3&splash=v2')">
+        <img src="https://media.themoviedb.org/t/p/w220_and_h330_face/j1knvM0CSG1TWWEdgz4AVqb5CXP.jpg">
+
+      </div>
+
+
+</section>
+
+      <div class="card" data-title="Avatar"
+      onclick="openPlayer('https://vimeus.com/e/movie?tmdb=83533&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40&theme=purple&loader=v2&overlay=v4&playUI=v3&epanel=v3&splash=v2')">
+        <img src="https://images.justwatch.com/poster/336228225/s718/avatar-3.jpg">
+      </div>
+
+<div class="card" data-title="sin piedad"
+onclick="openPlayer('https://vimeus.com/e/movie?tmdb=1236153&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40&theme=purple&loader=v2&overlay=v2&playUI=v3&epanel=v3&splash=v2')">
+<img src="https://media.themoviedb.org/t/p/w220_and_h330_face/mgqAZeEI5hnAgeVZ0kAdYiPy1Rs.jpg">
+</div>
+
+<div class="card" data-title="terror en silent hill"
+onclick="openPlayer('https://vimeus.com/e/movie?tmdb=680493&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40&theme=purple&loader=v2&overlay=v2&playUI=v3&epanel=v3&splash=v2')">
+<img src="https://media.themoviedb.org/t/p/w220_and_h330_face/i4EiDq1lXEEJIc439BVzdreQZEX.jpg">
+</div>
+
+
+<div class="card" data-title="turbulencia"
+onclick="openPlayer('https://vimeus.com/e/movie?tmdb=1401778&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40&theme=purple&loader=v2&overlay=v2&playUI=v3&epanel=v3&splash=v2')">
+<img src="https://media.themoviedb.org/t/p/w220_and_h330_face/jRuiKL4S9UpLma2ZlM47xIu2gbe.jpg">
+</div>
+
+<div class="card" data-title="exterminio templo de huesos"
+onclick="openPlayer('https://vimeus.com/e/movie?tmdb=1272837&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40&theme=purple&loader=v2&overlay=v2&playUI=v3&epanel=v3&splash=v2')">
+<img src="https://media.themoviedb.org/t/p/w220_and_h330_face/6yUxfwcDYR0RRfbxwGA7rhwreWU.jpg">
+</div>
+
+<div class="card" data-title="equipo Demolición"
+onclick="openPlayer('https://vimeus.com/e/movie?tmdb=1168190&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40&theme=purple&loader=v2&overlay=v2&playUI=v3&epanel=v3&splash=v2')">
+<img src="https://media.themoviedb.org/t/p/w220_and_h330_face/pG39vgTEhHeYIlcPJtHpxNLdPPM.jpg">
+</div>
+
+<div class="card" data-title="marty supremo"
+onclick="openPlayer('https://vimeus.com/e/movie?tmdb=1317288&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40&theme=purple&loader=v2&overlay=v2&playUI=v3&epanel=v3&splash=v2')">
+<img src="https://media.themoviedb.org/t/p/w220_and_h330_face/jctiZ1I2p4b6mceR85QxYhgs4Ft.jpg">
+</div>
+
+<div class="card" data-title="#"
+onclick="openPlayer('https://embed.ksdjugfsddeports.com/embed/canal5.html')">
+<img src="#">
+</div>
+
+<div class="card" data-title="#"
+onclick="openPlayer('#')">
+<img src="#">
+</div>
+
+   <div class="card" data-title="Batman"
+      onclick="openPlayer('https://vimeus.com/e/movie?tmdb=414906&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40')">
+        <img src="https://image.tmdb.org/t/p/w300/74xTEgt7R36Fpooo50r9T25onhq.jpg">
+      </div>
+      </div>
+</div>
+ 
+<section class="top10">
+  <h2>Top 10 Películas hoy</h2>
+
+  <div class="top10-row">
+
+    <div class="top-card" onclick="playTop10('https://vimeus.com/e/movie?tmdb=1159559&view_key=0i7Ov6i16HcYq8ndQSlIgOZfCCTtmFig5Ecr38BHgEQ&theme=purple&overlay=v3')">
+      <span class="top-number">1</span>
+      <img src="https://www.bizcochito.es/img/tt27047903-es-pos.webp">
+    </div>
+
+    <div class="top-card" onclick="playTop10('LINK2')">
+      <span class="top-number">2</span>
+      <img src="https://image.tmdb.org/t/p/w300/6DrHO1jr3qVrViUO6s6kFiAGM7.jpg">
+    </div>
+
+    <div class="top-card" onclick="playTop10('LINK3')">
+      <span class="top-number">3</span>
+      <img src="https://image.tmdb.org/t/p/w300/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg">
+    </div>
+
+    <div class="top-card" onclick="playTop10('https://vimeus.com/e/movie?tmdb=1084242&view_key=JqpbzCzIiHd-rl7ICBNydD0wYqoTtoyCjk_FBkgwXjU&theme=purple&loader=v3')">
+      <span class="top-number">4</span>
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUyrE6fHlKgwpuXBbxPqnvsvK3C0pHJcJt9FHW8XpubtwMQgIqIaXKXOo&s=10">
+    </div>
+
+
+    <div class="top-card" onclick="playTop10('https://vimeus.com/e/movie?tmdb=1236153&view_key=JqpbzCzIiHd-rl7ICBNydD0wYqoTtoyCjk_FBkgwXjU&theme=purple&loader=v3')">
+      <span class="top-number">5</span>
+      <img src="https://m.media-amazon.com/images/M/MV5BNmU1ZTI1YWYtOWY5NS00ZmQ2LWI4N2QtODBkYTEyMDJlY2VjXkEyXkFqcGc@._V1_.jpg">
+    </div>
+
+
+   <div class="top-card" onclick="playTop10('https://vimeus.com/e/movie?tmdb=680493&view_key=JqpbzCzIiHd-rl7ICBNydD0wYqoTtoyCjk_FBkgwXjU&theme=cosmic')">
+      <span class="top-number">6</span>
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGqJ8ALUL-Suo-rzHcSo6Mf2PuUW96dpD-OBshEIhvK2dsp-D-khv3XCB0&s=10">
+    </div>
+
+
+    <div class="top-card" onclick="playTop10('https://vimeus.com/e/movie?tmdb=157336&view_key=JqpbzCzIiHd-rl7ICBNydD0wYqoTtoyCjk_FBkgwXjU&theme=cosmic')">
+      <span class="top-number">7</span>
+      <img src="https://m.media-amazon.com/images/S/pv-target-images/79194981293eabf6620ece96eb5a9c1fffa04d3374ae12986e0748800b37b9cf.jpg">
+    </div>
+
+
+   <div class="top-card" onclick="playTop10('https://vimeus.com/e/movie?tmdb=1180831&view_key=JqpbzCzIiHd-rl7ICBNydD0wYqoTtoyCjk_FBkgwXjU&theme=cosmic')">
+      <span class="top-number">8</span>
+      <img src="https://dnm.nflximg.net/api/v6/mAcAr9TxZIVbINe88xb3Teg5_OA/AAAABStJYmpBlHUYIGzPMKBVg09eNJwrJJbYAoguqZOcZSoO_kOWvraMyNa-QfoVM7Ee2HdnhCF2zEzd22_NhNt-xPsImsxnCQDyNGGd.jpg?r=194">
+    </div>
+
+
+   <div class="top-card" onclick="playTop10('https://vimeus.com/e/movie?tmdb=1241982&view_key=JqpbzCzIiHd-rl7ICBNydD0wYqoTtoyCjk_FBkgwXjU&theme=cosmic')">
+      <span class="top-number">9</span>
+      <img src="https://s3.amazonaws.com/nightjarprod/content/uploads/sites/340/2024/11/04225011/yh64qw9mgXBvlaWDi7Q9tpUBAvH-scaled.jpg">
+    </div>
+
+
+    <div class="top-card" onclick="playTop10('LINK4')">
+      <span class="top-number">10</span>
+      <img src="#">
+    </div>
+
+  </div>
+</section>
+
+<div class="section">
+<h2>Acción</h2>
+  <div class="carousel">
+
+    <div class="card" data-title="El engaño"
+    onclick="openPlayer('https://vimeus.com/e/movie?tmdb=799882&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40&theme=purple')">
+      <img src="https://media.themoviedb.org/t/p/w220_and_h330_face/uuIP7lRgzSjaZ4CT33WHfctLARs.jpg">
+    </div>
+
+<div class="card" data-title="batman el caballero de la noche"
+onclick="openPlayer('https://vimeus.com/e/movie?tmdb=155&view_key=lSVxBn8N6v05JAm6dLcHfLZxAHx3rUsvpap7ZHwKbyc&theme=cosmic&loader=v3')">
+<img src="https://m.media-amazon.com/images/M/MV5BN2U3NmZjMTYtY2JhOS00NzU4LWJkMDAtZjFmZjAyN2ZlMTMxXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg">
+</div>
+
+<div class="card" data-title="el señor de los anillos"
+onclick="openPlayer('https://vimeus.com/e/movie?tmdb=122&view_key=cz82RD0V9SW5nUB7FnQFtC0uS90xBkH93pMg3uC6DQg&theme=cosmic&loader=v3')">
+<img src="https://m.media-amazon.com/images/M/MV5BZWZlY2RiMGQtOWMyNC00OTk3LWIzYzEtMWYzMTkwYzQzNzZiXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg">
+</div>
+
+<div class="card" data-title="interestelar"
+onclick="openPlayer('https://vimeus.com/e/movie?tmdb=157336&view_key=cz82RD0V9SW5nUB7FnQFtC0uS90xBkH93pMg3uC6DQg&theme=cosmic&loader=v3')">
+<img src="https://m.media-amazon.com/images/I/A1JVqNMI7UL._AC_UF894,1000_QL80_.jpg">
+</div>
+
+<div class="card" data-title="el pianista"
+onclick="openPlayer('https://vimeus.com/e/movie?tmdb=423&view_key=cz82RD0V9SW5nUB7FnQFtC0uS90xBkH93pMg3uC6DQg&theme=cosmic&loader=v3')">
+<img src="https://images.justwatch.com/poster/74766078/s718/el-pianista.jpg">
+</div>
+
+<div class="card" data-title="scream 7"
+onclick="openPlayer('https://vimeus.com/e/movie?tmdb=1159559&view_key=cz82RD0V9SW5nUB7FnQFtC0uS90xBkH93pMg3uC6DQg&theme=cosmic&loader=v3')">
+<img src="https://labutacaweb.com/wp-content/uploads/2026/03/scream-7-pelicula-estreno-69a1868e2d0727465825818355423627.jpg?w=691">
+</div>
+
+<div class="card" data-title="depredador tierras salvajes"
+onclick="openPlayer('https://vimeus.com/e/movie?tmdb=1242898&view_key=cz82RD0V9SW5nUB7FnQFtC0uS90xBkH93pMg3uC6DQg&theme=cosmic&loader=v3')">
+<img src="https://m.media-amazon.com/images/M/MV5BNTdjZGUxMTItNjRkNS00N2VhLWE4MjMtMjVhODMwMGIxNjUwXkEyXkFqcGc@._V1_.jpg">
+</div>
+
+    <div class="card" data-title="xxx triple x"
+    onclick="openPlayer('https://vimeus.com/e/movie?tmdb=7451&view_key=cz82RD0V9SW5nUB7FnQFtC0uS90xBkH93pMg3uC6DQg&theme=cosmic&loader=v3')">
+      <img src="https://images.justwatch.com/poster/319488757/s718/xxx.jpg">
+    </div>
+
+<div class="card" data-title="la guerra de los mundos"
+onclick="openPlayer('https://vimeus.com/e/movie?tmdb=74&view_key=cz82RD0V9SW5nUB7FnQFtC0uS90xBkH93pMg3uC6DQg&theme=cosmic')">
+<img src="https://play-lh.googleusercontent.com/aHqHzvblltMk_kiPD9-C36eiguwmg_E3pUOrt-jjyNpHIZ6MQJnVb-5CYA_oNsTM4VAS">
+</div>
+
+<div class="card" data-title="la cacería"
+onclick="openPlayer('https://vimeus.com/e/movie?tmdb=514847&view_key=cz82RD0V9SW5nUB7FnQFtC0uS90xBkH93pMg3uC6DQg&theme=cosmic')">
+<img src="https://media.themoviedb.org/t/p/w220_and_h330_face/5WCuPRfa0h8jMT4Iu2jIIQXqllM.jpg">
+</div>
+
+<div class="card" data-title="doctor strange"
+onclick="openPlayer('https://vimeus.com/e/movie?tmdb=453395&view_key=cz82RD0V9SW5nUB7FnQFtC0uS90xBkH93pMg3uC6DQg&theme=cosmic&overlay=v3&epanel=v3&splash=v2')">
+<img src="https://media.themoviedb.org/t/p/w220_and_h330_face/1w3MlLZPqr2Pm5loQ9h2gJwenMr.jpg">
+</div>
+
+<div class="card" data-title="sisu: caminoa la venganza"
+onclick="openPlayer('https://vimeus.com/e/movie?tmdb=1223601&view_key=cz82RD0V9SW5nUB7FnQFtC0uS90xBkH93pMg3uC6DQg&theme=cosmic&overlay=v3&epanel=v3&splash=v2')">
+<img src="https://media.themoviedb.org/t/p/w220_and_h330_face/mM92ShBRS17LdUemUY2ca79EyMo.jpg">
+</div>
+
+<div class="card" data-title="troll"
+onclick="openPlayer('https://vimeus.com/e/movie?tmdb=736526&view_key=cz82RD0V9SW5nUB7FnQFtC0uS90xBkH93pMg3uC6DQg&theme=cosmic&overlay=v3&epanel=v3&splash=v2')">
+<img src="https://media.themoviedb.org/t/p/w220_and_h330_face/ntwVUjOOA2kpTkgng4OotBMhyUP.jpg">
+</div>
+
+  </div>
+</div>
+
+<div class="section">
+  <h2>Colección</h2>
+  <div class="carousel">
+
+    <div class="card" data-title="#"
+      onclick="openPlayer('#">
+      <img src="#">
+    </div>
+
+  </div>
+</div>
+
+<section class="series-section">
+  <h2>Series</h2>
+
+  <div class="series-row">
+
+    <div class="serie-card" onclick="openSerie('serie1')">
+      <img src="https://via.placeholder.com/150x220">
+      <p>Mi Serie 1</p>
+    </div>
+
+    <div class="serie-card" onclick="openSerie('serie2')">
+      <img src="https://s3.amazonaws.com/nightjarprod/content/uploads/sites/340/2024/11/04225011/yh64qw9mgXBvlaWDi7Q9tpUBAvH-scaled.jpg">
+      <p>Mi Serie 2</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- POPUP -->
+<div id="serieModal">
+  <div class="modal-content">
+
+    <span onclick="closeSerie()">✕</span>
+
+    <h3 id="serieTitle"></h3>
+
+    <div id="temporadas"></div>
+    <div id="capitulos"></div>
+
+  </div>
+</div>
+
+
+<div class="section">
+  <h2>Populares</h2>
+  <div class="carousel">
+
+    <div class="card" data-title="Batman"
+      onclick="openPlayer('https://vimeus.com/e/movie?tmdb=414906&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40')">
+      <img src="https://image.tmdb.org/t/p/w300/74xTEgt7R36Fpooo50r9T25onhq.jpg">
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <h2>Populares</h2>
+  <div class="carousel">
+
+    <div class="card" data-title="Batman"
+      onclick="openPlayer('https://vimeus.com/e/movie?tmdb=414906&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40')">
+      <img src="https://image.tmdb.org/t/p/w300/74xTEgt7R36Fpooo50r9T25onhq.jpg">
+    </div>
+
+  </div>
+</div>
+ 
+
+
+    </div>
+  </div>
+
+</div>
+
+
+
+</div>
+<script>
+/* HERO AUTO */
+const heroMovies = [
+{
+  image: "https://image.tmdb.org/t/p/original/8rpDcsfLJypbO6vREc0547VKqEv.jpg",
+  video: "https://tuservidor.com/pelicula1.mp4"
+},
+{
+  image: "https://image.tmdb.org/t/p/original/74xTEgt7R36Fpooo50r9T25onhq.jpg",
+  video: "https://tuservidor.com/pelicula2.mp4"
+}
+];
+
+let index = 0;
+
+setInterval(() => {
+  document.getElementById("heroImg").src = heroMovies[index].image;
+  index = (index + 1) % heroMovies.length;
+}, 5000);
+
+document.querySelector(".hero").onclick = function(){
+  openPlayer(heroMovies[index].video);
+};
+
+/* HEADER HIDE SCROLL */
+let lastScroll=0;
+window.addEventListener("scroll",()=>{
+  const header=document.getElementById("header");
+  const y=window.pageYOffset;
+
+  if(y>lastScroll) header.style.transform="translateY(-100%)";
+  else header.style.transform="translateY(0)";
+
+  lastScroll=y;
+});
+
+/* BUSCADOR HBO */
+const search = document.getElementById("search");
+const cards = document.querySelectorAll(".card");
+const resultsBox = document.getElementById("searchResults");
+const resultsGrid = document.getElementById("resultsGrid");
+
+search.addEventListener("input", () => {
+  const q = search.value.toLowerCase().trim();
+
+  resultsGrid.innerHTML = "";
+
+  if (q === "") {
+    resultsBox.style.display = "none";
+    return;
+  }
+
+  let found = false;
+
+  cards.forEach(card => {
+    const title = card.dataset.title.toLowerCase();
+    if (title.includes(q)) {
+      const clone = card.cloneNode(true);
+      resultsGrid.appendChild(clone);
+      found = true;
+    }
+  });
+
+  resultsBox.style.display = found ? "block" : "none";
+});
+
+
+</script>
+
+
+<script>
+function requestFullScreenRotation(){
+  if (screen.orientation && screen.orientation.lock) {
+    screen.orientation.lock('landscape');
+  }
+}
+</script>
+
+
+
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+if(localStorage.getItem("cineapp_msg") === "ok") return;
+
+setTimeout(function(){
+
+const popup = document.createElement("div");
+
+popup.innerHTML = `
+
+<style>
+
+#cineapp-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.85);
+backdrop-filter:blur(6px);
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:9999;
+animation:fadeIn 0.4s ease;
+font-family:Arial;
+}
+
+#cineapp-box{
+background:#141414;
+color:white;
+width:90%;
+max-width:380px;
+border-radius:18px;
+padding:25px;
+text-align:center;
+box-shadow:0 0 25px rgba(138,43,226,0.4);
+animation:scaleIn 0.35s ease;
+}
+
+#cineapp-box h2{
+margin-top:0;
+color:#8A2BE2;
+font-size:22px;
+}
+
+#cineapp-box p{
+font-size:14px;
+opacity:0.9;
+line-height:1.6;
+margin:10px 0;
+}
+
+#cineapp-btn{
+margin-top:15px;
+padding:11px 28px;
+border:none;
+border-radius:25px;
+background:#8A2BE2;
+color:white;
+font-size:14px;
+cursor:pointer;
+transition:0.3s;
+}
+
+#cineapp-btn:hover{
+background:#9f4dff;
+}
+
+#cineapp-check{
+margin-top:12px;
+font-size:13px;
+opacity:0.8;
+}
+
+@keyframes fadeIn{
+from{opacity:0}
+to{opacity:1}
+}
+
+@keyframes scaleIn{
+from{transform:scale(0.8);opacity:0}
+to{transform:scale(1);opacity:1}
+}
+
+</style>
+
+<div id="cineapp-overlay">
+
+<div id="cineapp-box">
+
+<h2>🎬 Gracias por usar CineApp</h2>
+
+<p>
+Nos alegra que disfrutes del contenido en nuestra aplicación.
+</p>
+
+<p>
+Los anuncios que aparecen ayudan a apoyar el desarrollo de la aplicación
+y permiten que el proyecto continúe activo.
+</p>
+
+<p>
+Algunos reproductores o servidores externos pueden mostrar publicidad
+propia, ya que pertenecen a plataformas externas donde se alojan los videos.
+</p>
+
+<p>
+Tu apoyo viendo los anuncios ayuda a mantener CineApp funcionando.
+¡Gracias por formar parte de la comunidad! 🍿
+</p>
+
+<label id="cineapp-check">
+<input type="checkbox" id="cineapp-nomore">
+ No volver a mostrar
+</label>
+
+<br>
+
+<button id="cineapp-btn">Entendido</button>
+
+</div>
+</div>
+`;
+
+document.body.appendChild(popup);
+
+document.getElementById("cineapp-btn").onclick = function(){
+
+if(document.getElementById("cineapp-nomore").checked){
+localStorage.setItem("cineapp_msg","ok");
+}
+
+document.getElementById("cineapp-overlay").remove();
+
+};
+
+},1200);
+
+});
+
+</script>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+const buscador = document.querySelector("input");
+const resultados = document.querySelector("#resultados");
+
+buscador.addEventListener("keyup", function(){
+
+let texto = buscador.value.trim();
+
+if(texto.length > 0){
+
+// ocultar todas las secciones
+document.querySelectorAll("h2").forEach(titulo=>{
+if(titulo.innerText !== "Resultados"){
+titulo.style.display="none";
+titulo.nextElementSibling.style.display="none";
+}
+});
+
+}else{
+
+// mostrar todo otra vez
+document.querySelectorAll("h2").forEach(titulo=>{
+titulo.style.display="";
+if(titulo.nextElementSibling){
+titulo.nextElementSibling.style.display="";
+}
+});
+
+}
+
+});
+
+});
+</script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+const player = document.createElement("div");
+player.id = "playerOverlay";
+
+player.innerHTML = `
+<span class="playerClose" onclick="closePlayer()">✕</span>
+<div class="playerWrapper">
+<iframe id="playerFrame" allowfullscreen></iframe>
+</div>
+`;
+
+document.body.appendChild(player);
+
+});
+
+function openPlayer(url){
+
+document.getElementById("playerOverlay").style.display="block";
+document.getElementById("playerFrame").src=url;
+
+}
+
+function closePlayer(){
+
+document.getElementById("playerOverlay").style.display="none";
+document.getElementById("playerFrame").src="";
+
+}
+
+</script>
+
+
+<script>
+
+setTimeout(function(){
+
+let intro = document.getElementById("introCine");
+
+intro.style.transition="opacity 1s";
+
+intro.style.opacity="0";
+
+setTimeout(function(){
+
+intro.style.display="none";
+
+},1000);
+
+},5000);
+
+</script>
+
+
+
+<script>
+function playVideo(link){
+  const iframe = document.getElementById("videoFrame");
+  const modal = document.getElementById("playerModal");
+
+  iframe.src = link;
+  modal.style.display = "flex";
+}
+</script>
+
+<script>
+// Crear reproductor automáticamente
+document.body.insertAdjacentHTML("beforeend", `
+<div id="playerModal" style="
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:black;
+  z-index:9999;
+">
+
+  <span id="closePlayerBtn" style="
+    position:absolute;
+    top:10px;
+    right:20px;
+    font-size:30px;
+    color:white;
+    cursor:pointer;
+    z-index:10000;
+  ">✕</span>
+
+  <iframe id="videoFrame"
+    style="width:100%; height:100%; border:none;"
+    allowfullscreen>
+  </iframe>
+
+</div>
+`);
+
+// Función para reproducir
+function playTop10(link){
+  const modal = document.getElementById("playerModal");
+  const iframe = document.getElementById("videoFrame");
+
+  iframe.src = link;
+  modal.style.display = "block";
+}
+
+// Cerrar reproductor
+document.addEventListener("click", function(e){
+  if(e.target.id === "closePlayerBtn"){
+    document.getElementById("videoFrame").src = "";
+    document.getElementById("playerModal").style.display = "none";
+  }
+});
+</script>
+
+
+<script>
+window.addEventListener("load", function(){
+
+// =====================
+// CREAR MENU INFERIOR
+// =====================
+var menu = document.createElement("div");
+menu.id = "bottomMenu";
+
+menu.style.position = "fixed";
+menu.style.bottom = "15px";
+menu.style.left = "50%";
+menu.style.transform = "translateX(-50%)";
+menu.style.width = "90%";
+menu.style.maxWidth = "420px";
+menu.style.height = "65px";
+menu.style.background = "rgba(0,0,0,0.6)";
+menu.style.backdropFilter = "blur(15px)";
+menu.style.borderRadius = "25px";
+menu.style.display = "flex";
+menu.style.justifyContent = "space-around";
+menu.style.alignItems = "center";
+menu.style.zIndex = "9999";
+menu.style.transition = "0.3s";
+
+// Botón Series
+var seriesBtn = document.createElement("div");
+seriesBtn.innerHTML = "📺<br><small>Series</small>";
+seriesBtn.style.color = "white";
+seriesBtn.style.textAlign = "center";
+seriesBtn.onclick = function(){
+  window.location.href = "go:43";
+};
+
+// Botón Perfil
+var profileBtn = document.createElement("div");
+profileBtn.id = "profileBtn";
+profileBtn.innerHTML = "👤<br><small>Perfil</small>";
+profileBtn.style.color = "white";
+profileBtn.style.textAlign = "center";
+profileBtn.onclick = openProfile;
+
+// Agregar botones
+menu.appendChild(seriesBtn);
+menu.appendChild(profileBtn);
+
+// Agregar al body
+document.body.appendChild(menu);
+
+
+// =====================
+// SCROLL SHOW/HIDE
+// =====================
+var lastScroll = 0;
+
+window.addEventListener("scroll", function(){
+  var currentScroll = window.pageYOffset;
+
+  if(currentScroll > lastScroll && currentScroll > 50){
+    menu.style.transform = "translate(-50%, 100px)";
+    menu.style.opacity = "0";
+  } else {
+    menu.style.transform = "translate(-50%, 0)";
+    menu.style.opacity = "1";
+  }
+
+  lastScroll = currentScroll;
+});
+
+
+// =====================
+// CREAR PERFIL
+// =====================
+var modal = document.createElement("div");
+modal.id = "profileModal";
+
+modal.style.display = "none";
+modal.style.position = "fixed";
+modal.style.top = "0";
+modal.style.left = "0";
+modal.style.width = "100%";
+modal.style.height = "100%";
+modal.style.background = "black";
+modal.style.zIndex = "10000";
+modal.style.color = "white";
+modal.style.padding = "20px";
+modal.style.overflow = "auto";
+
+modal.innerHTML = `
+<h2 style="text-align:center;">Tu perfil</h2>
+
+<div style="display:flex; flex-direction:column; align-items:center;">
+
+<img id="mainAvatar" src="https://i.pravatar.cc/150?img=1" style="width:100px; height:100px; border-radius:50%; border:3px solid red;">
+
+<input id="profileName" placeholder="Tu nombre" style="margin-top:10px; padding:10px; border-radius:10px; border:none; text-align:center; width:80%;">
+</div>
+
+<h3>Avatares</h3>
+
+<div id="avatarList" style="display:flex; gap:10px; overflow:auto;">
+</div>
+
+<button onclick="saveProfile()" style="width:100%; padding:10px; background:red; border:none; border-radius:10px; margin-top:20px; color:white;">
+Guardar
+</button>
+
+<button onclick="closeProfile()" style="width:100%; padding:10px; background:#333; border:none; border-radius:10px; margin-top:10px; color:white;">
+Cerrar
+</button>
+`;
+
+document.body.appendChild(modal);
+
+
+// =====================
+// CREAR AVATARES
+// =====================
+var avatarList = document.getElementById("avatarList");
+
+for(let i=1;i<=8;i++){
+  let img = document.createElement("img");
+  img.src = "https://i.pravatar.cc/100?img="+i;
+  img.style.width = "60px";
+  img.style.height = "60px";
+  img.style.borderRadius = "50%";
+  img.onclick = function(){
+    selectAvatar(img.src);
+  };
+  avatarList.appendChild(img);
+}
+
+
+// =====================
+// FUNCIONES PERFIL
+// =====================
+window.openProfile = function(){
+  modal.style.display = "block";
+
+  document.getElementById("profileName").value = localStorage.getItem("name") || "";
+  let avatar = localStorage.getItem("avatar");
+
+  if(avatar){
+    document.getElementById("mainAvatar").src = avatar;
+  }
+};
+
+window.closeProfile = function(){
+  modal.style.display = "none";
+};
+
+var selectedAvatar = "";
+
+window.selectAvatar = function(src){
+  selectedAvatar = src;
+  document.getElementById("mainAvatar").src = src;
+};
+
+window.saveProfile = function(){
+  let name = document.getElementById("profileName").value;
+
+  localStorage.setItem("name", name);
+  localStorage.setItem("avatar", selectedAvatar);
+
+  updateProfile();
+  modal.style.display = "none";
+};
+
+
+// =====================
+// ACTUALIZAR BOTON PERFIL
+// =====================
+function updateProfile(){
+  let avatar = localStorage.getItem("avatar");
+
+  if(avatar){
+    profileBtn.innerHTML = '<img src="'+avatar+'" style="width:30px; height:30px; border-radius:50%;"><br><small>Perfil</small>';
+  }
+}
+
+// cargar al inicio
+updateProfile();
+
+});
+</script>
+
+
+
+<script>
+
+// DATOS DE SERIES
+const series = {
+  serie1: {
+    title: "Mi Serie 1",
+    temporadas: {
+      "Temporada 1": [
+        {name:"Cap 1", link:"https://www.w3schools.com/html/mov_bbb.mp4"},
+        {name:"Cap 2", link:"https://www.w3schools.com/html/mov_bbb.mp4"}
+      ],
+      "Temporada 2": [
+        {name:"Cap 1", link:"https://www.w3schools.com/html/mov_bbb.mp4"}
+      ]
+    }
+  },
+
+  serie2: {
+    title: "Mi Serie 2",
+    temporadas: {
+      "Temporada 1": [
+        {name:"Cap 1", link:"https://www.w3schools.com/html/mov_bbb.mp4"}
+      ]
+    }
+  }
+};
+
+
+// ABRIR SERIE
+function openSerie(id){
+  const serie = series[id];
+
+  document.getElementById("serieModal").style.display = "block";
+  document.getElementById("serieTitle").innerText = serie.title;
+
+  let tempHTML = "";
+
+  for(let temp in serie.temporadas){
+    tempHTML += `<div class="temporada-btn" onclick="loadCaps('${id}','${temp}')">${temp}</div>`;
+  }
+
+  document.getElementById("temporadas").innerHTML = tempHTML;
+  document.getElementById("capitulos").innerHTML = "";
+}
+
+
+// CARGAR CAPÍTULOS
+function loadCaps(id, temp){
+  const caps = series[id].temporadas[temp];
+
+  let html = "";
+
+  caps.forEach(cap=>{
+    html += `<div class="capitulo-btn" onclick="playVideo('${cap.link}')">${cap.name}</div>`;
+  });
+
+  document.getElementById("capitulos").innerHTML = html;
+}
+
+
+// CERRAR
+function closeSerie(){
+  document.getElementById("serieModal").style.display = "none";
+}
+
+</script>
+
+</body>
+</html>
