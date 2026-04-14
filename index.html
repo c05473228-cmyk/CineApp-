@@ -71,8 +71,8 @@ color:#7b3cff;
 }
 
 .serie-card img {
-  width: 150px;   /* 🔥 CONTROL AQUÍ */
-  height: 220px;  /* 🔥 CONTROL AQUÍ */
+  width: 300px;   /* 🔥 CONTROL AQUÍ */
+  height: 160px;  /* 🔥 CONTROL AQUÍ */
   object-fit: cover;
   border-radius: 12px;
 }
@@ -149,7 +149,7 @@ color:#7b3cff;
 
 /* Imagen PRO */
 .top-card img {
-  width: 130px;
+  width: 300px;
   height: 190px;
   border-radius: 14px;
   object-fit: cover;
@@ -186,8 +186,8 @@ color:#7b3cff;
 
 /* IMAGEN abajo */
 .top-card img {
-  width: 150px;
-  height: 220px;
+  width: 300px;
+  height: 160px;
   border-radius: 14px;
   object-fit: cover;
   position: relative;
@@ -472,10 +472,6 @@ Iniciando
 onclick="openPlayer('https://vimeus.com/e/movie?tmdb=1236153&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40&theme=purple&loader=v2&overlay=v2&playUI=v3&epanel=v3&splash=v2')">
 <img src="https://media.themoviedb.org/t/p/w220_and_h330_face/mgqAZeEI5hnAgeVZ0kAdYiPy1Rs.jpg">
 </div>
-
-<script async="async" data-cfasync="false" src="https://pl26199452.profitablecpmratenetwork.com/1a56b4b860a8f2efc57d1fd726533509/invoke.js"></script>
-<div id="container-1a56b4b860a8f2efc57d1fd726533509"></div>
-
 
 <div class="card" data-title="terror en silent hill"
 onclick="openPlayer('https://vimeus.com/e/movie?tmdb=680493&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40&theme=purple&loader=v2&overlay=v2&playUI=v3&epanel=v3&splash=v2')">
@@ -1127,195 +1123,6 @@ document.addEventListener("click", function(e){
 
 
 <script>
-window.addEventListener("load", function(){
-
-// =====================
-// CREAR MENU INFERIOR
-// =====================
-var menu = document.createElement("div");
-menu.id = "bottomMenu";
-
-menu.style.position = "fixed";
-menu.style.bottom = "15px";
-menu.style.left = "50%";
-menu.style.transform = "translateX(-50%)";
-menu.style.width = "90%";
-menu.style.maxWidth = "420px";
-menu.style.height = "65px";
-menu.style.background = "rgba(0,0,0,0.6)";
-menu.style.backdropFilter = "blur(15px)";
-menu.style.borderRadius = "25px";
-menu.style.display = "flex";
-menu.style.justifyContent = "space-around";
-menu.style.alignItems = "center";
-menu.style.zIndex = "9999";
-menu.style.transition = "0.3s";
-
-// Botón Series
-var seriesBtn = document.createElement("div");
-seriesBtn.innerHTML = "📺<br><small>Series</small>";
-seriesBtn.style.color = "white";
-seriesBtn.style.textAlign = "center";
-seriesBtn.onclick = function(){
-  window.location.href = "go:43";
-};
-
-// Botón Perfil
-var profileBtn = document.createElement("div");
-profileBtn.id = "profileBtn";
-profileBtn.innerHTML = "👤<br><small>Perfil</small>";
-profileBtn.style.color = "white";
-profileBtn.style.textAlign = "center";
-profileBtn.onclick = openProfile;
-
-// Agregar botones
-menu.appendChild(seriesBtn);
-menu.appendChild(profileBtn);
-
-// Agregar al body
-document.body.appendChild(menu);
-
-
-// =====================
-// SCROLL SHOW/HIDE
-// =====================
-var lastScroll = 0;
-
-window.addEventListener("scroll", function(){
-  var currentScroll = window.pageYOffset;
-
-  if(currentScroll > lastScroll && currentScroll > 50){
-    menu.style.transform = "translate(-50%, 100px)";
-    menu.style.opacity = "0";
-  } else {
-    menu.style.transform = "translate(-50%, 0)";
-    menu.style.opacity = "1";
-  }
-
-  lastScroll = currentScroll;
-});
-
-
-// =====================
-// CREAR PERFIL
-// =====================
-var modal = document.createElement("div");
-modal.id = "profileModal";
-
-modal.style.display = "none";
-modal.style.position = "fixed";
-modal.style.top = "0";
-modal.style.left = "0";
-modal.style.width = "100%";
-modal.style.height = "100%";
-modal.style.background = "black";
-modal.style.zIndex = "10000";
-modal.style.color = "white";
-modal.style.padding = "20px";
-modal.style.overflow = "auto";
-
-modal.innerHTML = `
-<h2 style="text-align:center;">Tu perfil</h2>
-
-<div style="display:flex; flex-direction:column; align-items:center;">
-
-<img id="mainAvatar" src="https://i.pravatar.cc/150?img=1" style="width:100px; height:100px; border-radius:50%; border:3px solid red;">
-
-<input id="profileName" placeholder="Tu nombre" style="margin-top:10px; padding:10px; border-radius:10px; border:none; text-align:center; width:80%;">
-</div>
-
-<h3>Avatares</h3>
-
-<div id="avatarList" style="display:flex; gap:10px; overflow:auto;">
-</div>
-
-<button onclick="saveProfile()" style="width:100%; padding:10px; background:red; border:none; border-radius:10px; margin-top:20px; color:white;">
-Guardar
-</button>
-
-<button onclick="closeProfile()" style="width:100%; padding:10px; background:#333; border:none; border-radius:10px; margin-top:10px; color:white;">
-Cerrar
-</button>
-`;
-
-document.body.appendChild(modal);
-
-
-// =====================
-// CREAR AVATARES
-// =====================
-var avatarList = document.getElementById("avatarList");
-
-for(let i=1;i<=8;i++){
-  let img = document.createElement("img");
-  img.src = "https://i.pravatar.cc/100?img="+i;
-  img.style.width = "60px";
-  img.style.height = "60px";
-  img.style.borderRadius = "50%";
-  img.onclick = function(){
-    selectAvatar(img.src);
-  };
-  avatarList.appendChild(img);
-}
-
-
-// =====================
-// FUNCIONES PERFIL
-// =====================
-window.openProfile = function(){
-  modal.style.display = "block";
-
-  document.getElementById("profileName").value = localStorage.getItem("name") || "";
-  let avatar = localStorage.getItem("avatar");
-
-  if(avatar){
-    document.getElementById("mainAvatar").src = avatar;
-  }
-};
-
-window.closeProfile = function(){
-  modal.style.display = "none";
-};
-
-var selectedAvatar = "";
-
-window.selectAvatar = function(src){
-  selectedAvatar = src;
-  document.getElementById("mainAvatar").src = src;
-};
-
-window.saveProfile = function(){
-  let name = document.getElementById("profileName").value;
-
-  localStorage.setItem("name", name);
-  localStorage.setItem("avatar", selectedAvatar);
-
-  updateProfile();
-  modal.style.display = "none";
-};
-
-
-// =====================
-// ACTUALIZAR BOTON PERFIL
-// =====================
-function updateProfile(){
-  let avatar = localStorage.getItem("avatar");
-
-  if(avatar){
-    profileBtn.innerHTML = '<img src="'+avatar+'" style="width:30px; height:30px; border-radius:50%;"><br><small>Perfil</small>';
-  }
-}
-
-// cargar al inicio
-updateProfile();
-
-});
-</script>
-
-
-
-<script>
-
 // DATOS DE SERIES
 const series = {
   serie1: {
@@ -1396,4 +1203,4 @@ function closeSerie(){
 </script>
 
 </body>
-</html>
+  </html>
