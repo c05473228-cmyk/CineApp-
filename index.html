@@ -1202,5 +1202,23 @@ function closeSerie(){
 
 </script>
 
+  <script>
+
+  let originalHeight = window.innerHeight;
+
+window.addEventListener("resize", () => {
+    const newHeight = window.innerHeight;
+
+    // teclado abierto → baja la pantalla
+    if (newHeight < originalHeight) {
+        document.getElementById("searchResults").style.top = "60px"; 
+    } 
+    // teclado cerrado → vuelve a su lugar
+    else {
+        document.getElementById("searchResults").style.top = "110px"; 
+    }
+});
+    </script>
+
 </body>
   </html>
