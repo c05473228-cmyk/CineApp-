@@ -1206,7 +1206,7 @@ window.addEventListener("resize", () => {
 <div class="collections-carousel">
 
   <div class="collection-card" onclick="openCollection('harry')">
-    <img src="https://image.tmdb.org/t/p/w500/8GYMEC9W1bE38vyRtmqfGJbdZ2z.jpg">
+    <img src="https://www.cinemascomics.com/wp-content/uploads/2022/11/harry-potter-warner-futuro.jpg">
     <p>Harry Potter</p>
   </div>
 
@@ -1252,20 +1252,24 @@ window.addEventListener("resize", () => {
 }
 .collections-carousel::-webkit-scrollbar{ display:none; }
 
+/* 🔥🔥 ESTILO PRIME VIDEO 🔥🔥 */
 .collection-card{
-  min-width:150px;
+  min-width:260px;        /* Más ancho estilo Prime */
+  aspect-ratio:16/9;      /* Forma horizontal */
   background:#1c1c1c;
   border-radius:10px;
+  overflow:hidden;        /* Hace el recorte bonito */
   flex-shrink:0;
   cursor:pointer;
-  transition:transform .2s;
+  transition:transform .25s;
 }
 .collection-card:hover{ transform:scale(1.05); }
 
+/* Imagen ajustada tipo Prime */
 .collection-card img{
   width:100%;
-  height:200px;
-  object-fit:cover;
+  height:100%;
+  object-fit:cover;       /* Relleno perfecto */
   border-radius:10px;
 }
 
@@ -1326,6 +1330,36 @@ window.addEventListener("resize", () => {
   height:100%;
   border:none;
 }
+
+
+/* ==== CARRUSEL ==== */
+.collections-carousel{
+  display:flex;
+  overflow-x:auto;
+  gap:12px;
+  padding:10px;
+}
+.collections-carousel::-webkit-scrollbar{ display:none; }
+
+/* 🔥🔥 ESTILO PRIME VIDEO RESPONSIVE 🔥🔥 */
+.collection-card{
+  width: 300px;            /* Tamaño perfecto para móvil */
+  height: 160px;            /* Proporción 16:9 */
+  background:#1c1c1c;
+  border-radius:10px;
+  overflow:hidden;
+  flex-shrink:0;
+  cursor:pointer;
+  transition:transform .25s;
+}
+.collection-card:hover{ transform:scale(1.05); }
+
+.collection-card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:10px;
+}
 </style>
 
 
@@ -1348,6 +1382,10 @@ const collections = {
 
       { name:"La Cámara Secreta",
         img:"https://image.tmdb.org/t/p/w300/sdEOH0992YZ0QSxgXNIGLq1ToUi.jpg",
+        link:"AQUÍ LINK" },
+
+{ name:"La Piedra Filosofal",
+        img:"#",
         link:"AQUÍ LINK" }
     ]
   },
@@ -1458,8 +1496,6 @@ function closePlayer(){
 }
 
 </script>
-
-
 
 </body>
   </html>
