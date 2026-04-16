@@ -428,13 +428,6 @@ color:red;
 }
 
 
-:root{
-  --color-main:#7b3cff;
-  --color-bg:#0b0b0f;
-  --color-card:#1b1b23;
-  --color-text:#ffffff;
-}
-
 
 
 </style>
@@ -713,20 +706,6 @@ onclick="openPlayer('https://vimeus.com/e/movie?tmdb=736526&view_key=cz82RD0V9SW
 
 
 
-<div class="section">
-  <h2>Colección</h2>
-  <div class="carousel">
-
-    <div class="card" data-title="#"
-      onclick="openPlayer('#">
-      <img src="#">
-    </div>
-
-  </div>
-</div>
-
-
-
 
   </div>
 </section>
@@ -744,37 +723,7 @@ onclick="openPlayer('https://vimeus.com/e/movie?tmdb=736526&view_key=cz82RD0V9SW
     <div id="capitulos"></div>
 
   </div>
-</div>
 
-
-<div class="section">
-  <h2>Populares</h2>
-  <div class="carousel">
-
-    <div class="card" data-title="Batman"
-      onclick="openPlayer('https://vimeus.com/e/movie?tmdb=414906&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40')">
-      <img src="https://image.tmdb.org/t/p/w300/74xTEgt7R36Fpooo50r9T25onhq.jpg">
-    </div>
-
-  </div>
-</div>
-
-<div class="section">
-  <h2>Populares</h2>
-  <div class="carousel">
-
-    <div class="card" data-title="Batman"
-      onclick="openPlayer('https://vimeus.com/e/movie?tmdb=414906&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40')">
-      <img src="https://image.tmdb.org/t/p/w300/74xTEgt7R36Fpooo50r9T25onhq.jpg">
-    </div>
-
-  </div>
-</div>
- 
-
-
-    </div>
-  </div>
 
 </div>
 
@@ -1248,7 +1197,270 @@ window.addEventListener("resize", () => {
 });
     </script>
 
+<!-- ========================================= -->
+<!-- 🔥 CARRUSEL DE COLECCIONES -->
+<!-- ========================================= -->
+
+<h2 style="margin-left:12px;">Colecciones</h2>
+
+<div class="collections-carousel">
+
+  <div class="collection-card" onclick="openCollection('harry')">
+    <img src="https://image.tmdb.org/t/p/w500/8GYMEC9W1bE38vyRtmqfGJbdZ2z.jpg">
+    <p>Harry Potter</p>
+  </div>
+
+  <div class="collection-card" onclick="openCollection('lotr')">
+    <img src="https://image.tmdb.org/t/p/w500/56zTpe2xvaA2AeU5nD0InTqW0b9.jpg">
+    <p>El Señor de los Anillos</p>
+  </div>
+
+  <div class="collection-card" onclick="openCollection('johnwick')">
+    <img src="https://image.tmdb.org/t/p/w500/5vHssUeVe25bMrof1HyaPyWgaP.jpg">
+    <p>John Wick</p>
+  </div>
+
+</div>
+
+
+<!-- ========================================= -->
+<!-- 🔥 MODAL DE COLECCIÓN -->
+<!-- ========================================= -->
+<div id="collectionModal">
+  <span onclick="closeCollection()">✕</span>
+  <h2 id="collectionTitle"></h2>
+  <div id="collectionGrid"></div>
+</div>
+
+<!-- ========================================= -->
+<!-- 🔥 REPRODUCTOR DE VIDEO -->
+<!-- ========================================= -->
+<div id="videoPlayerView"></div>
+
+
+<!-- ========================================= -->
+<!-- 🔥 CSS COMPLETO -->
+<!-- ========================================= -->
+<style>
+
+/* ==== CARRUSEL ==== */
+.collections-carousel{
+  display:flex;
+  overflow-x:auto;
+  gap:12px;
+  padding:10px;
+}
+.collections-carousel::-webkit-scrollbar{ display:none; }
+
+.collection-card{
+  min-width:150px;
+  background:#1c1c1c;
+  border-radius:10px;
+  flex-shrink:0;
+  cursor:pointer;
+  transition:transform .2s;
+}
+.collection-card:hover{ transform:scale(1.05); }
+
+.collection-card img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+  border-radius:10px;
+}
+
+.collection-card p{
+  text-align:center;
+  font-size:14px;
+  padding:8px 0;
+}
+
+/* ==== MODAL DE COLECCIÓN ==== */
+#collectionModal{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#0b0b0f;
+  z-index:9999;
+  padding:20px;
+  overflow-y:auto;
+}
+
+#collectionModal span{
+  position:fixed;
+  top:20px;
+  left:20px;
+  font-size:28px;
+  cursor:pointer;
+  color:white;
+}
+
+#collectionGrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin-top:20px;
+}
+
+.collection-movie img{
+  width:100%;
+  border-radius:10px;
+}
+
+/* ==== REPRODUCTOR ==== */
+#videoPlayerView{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:black;
+  z-index:999999;
+}
+#videoPlayerView iframe{
+  width:100%;
+  height:100%;
+  border:none;
+}
+</style>
+
+
+<!-- ========================================= -->
+<!-- 🔥 JAVASCRIPT COMPLETO -->
+<!-- ========================================= -->
+<script>
+
+// ======================================
+// 1. COLECCIONES (EDITA LOS LINKS)
+// ======================================
+const collections = {
+
+  harry: {
+    title: "Harry Potter",
+    movies: [
+      { name:"La Piedra Filosofal",
+        img:"https://image.tmdb.org/t/p/w300/wuMc08IPKEatf9rnMNXvIDxqP4W.jpg",
+        link:"AQUÍ LINK" },
+
+      { name:"La Cámara Secreta",
+        img:"https://image.tmdb.org/t/p/w300/sdEOH0992YZ0QSxgXNIGLq1ToUi.jpg",
+        link:"AQUÍ LINK" }
+    ]
+  },
+
+  lotr: {
+    title: "El Señor de los Anillos",
+    movies: [
+      { name:"La Comunidad del Anillo",
+        img:"https://image.tmdb.org/t/p/w300/56zTpe2xvaA2AeU5nD0InTqW0b9.jpg",
+        link:"AQUÍ LINK" },
+
+      { name:"Las Dos Torres",
+        img:"https://image.tmdb.org/t/p/w300/rrpVySkK7cdWxGZcP4CoJAV2zqK.jpg",
+        link:"AQUÍ LINK" }
+    ]
+  },
+
+  johnwick: {
+    title: "John Wick",
+    movies: [
+      { name:"John Wick 1",
+        img:"https://image.tmdb.org/t/p/w300/5vHssUeVe25bMrof1HyaPyWgaP.jpg",
+        link:"AQUÍ LINK" },
+
+      { name:"John Wick 2",
+        img:"https://image.tmdb.org/t/p/w300/kjLOTW5kQmQfNvQ2Jz4PlQ5iyir.jpg",
+        link:"AQUÍ LINK" }
+    ]
+  }
+
+};
+
+
+
+// ======================================
+// 2. ABRIR COLECCIÓN
+// ======================================
+function openCollection(id){
+
+  const data = collections[id];
+
+  document.getElementById("collectionTitle").innerText = data.title;
+
+  const grid = document.getElementById("collectionGrid");
+  grid.innerHTML = "";
+
+  data.movies.forEach(movie => {
+
+    const div = document.createElement("div");
+    div.className = "collection-movie";
+
+    div.innerHTML = `
+      <img src="${movie.img}">
+      <p>${movie.name}</p>
+    `;
+
+    div.onclick = () => openPlayer(movie.link);
+
+    grid.appendChild(div);
+  });
+
+  document.getElementById("collectionModal").style.display = "block";
+}
+
+// ======================================
+// 3. CERRAR COLECCIÓN
+// ======================================
+function closeCollection(){
+  document.getElementById("collectionModal").style.display = "none";
+}
+
+
+// ======================================
+// 4. ABRIR REPRODUCTOR
+// ======================================
+function openPlayer(url){
+
+  // CERRAR LISTA
+  document.getElementById("collectionModal").style.display = "none";
+
+  // MOSTRAR REPRODUCTOR
+  const player = document.getElementById("videoPlayerView");
+  player.style.display = "block";
+
+  // CARGAR VIDEO
+  player.innerHTML = `
+    <span onclick="closePlayer()" style="
+      position:absolute;
+      top:20px;
+      left:20px;
+      color:white;
+      font-size:30px;
+      cursor:pointer;
+      z-index:10;
+    ">✕</span>
+
+    <iframe src="${url}" allowfullscreen></iframe>
+  `;
+}
+
+// ======================================
+// 5. CERRAR REPRODUCTOR
+// ======================================
+function closePlayer(){
+  const player = document.getElementById("videoPlayerView");
+  player.style.display = "none";
+  player.innerHTML = "";
+}
+
+</script>
+
 
 
 </body>
   </html>
+
