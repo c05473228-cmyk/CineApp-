@@ -380,8 +380,8 @@ border-radius:10px;
 
 .card{
   min-width:100px;
-  width:150px;
-  height:200px; /* proporción poster cine */
+  width:140px;
+  height:210px; /* proporción poster cine */
   border-radius:14px;
   overflow:hidden;
   cursor:pointer;
@@ -600,6 +600,16 @@ onclick="openPlayer('#')">
   </div>
 </section>
 
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
 <div class="section">
 <h2>Acción</h2>
   <div class="carousel">
@@ -672,33 +682,38 @@ onclick="openPlayer('https://vimeus.com/e/movie?tmdb=736526&view_key=cz82RD0V9SW
   </div>
 </div>
 
+</div>
+
+
+</div>
+
 <div class="section">
 <h2>Animación</h2>
   <div class="carousel">
 
-    <div class="card" data-title="#"
-    onclick="openPlayer('#')">
-      <img src="#">
+    <div class="card" data-title="Mario galaxi"
+    onclick="openPlayer('https://vimeos.net/embed-0a5sm8h3422y.html')">
+      <img src="https://m.media-amazon.com/images/M/MV5BNTRkODc0MmItYzQ2NS00MGU3LTkwMTUtMGRmZjMwODNiNmI0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg">
     </div>
 
-<div class="card" data-title="#"
-    onclick="openPlayer('#')">
-      <img src="#">
+<div class="card" data-title="Super Wings"
+    onclick="openPlayer('https://vimeos.net/embed-iblem8qfkrde.html')">
+      <img src="https://m.media-amazon.com/images/M/MV5BZjEyOWFiNDMtMGVkNS00Y2IxLTk5ZTUtMDM0ODM0OWQ3YzI1XkEyXkFqcGc@._V1_.jpg">
     </div>
 
-<div class="card" data-title="#"
-    onclick="openPlayer('#')">
-      <img src="#">
+<div class="card" data-title="Bob esponja"
+    onclick="openPlayer('https://vimeos.net/embed-5288b8qnzc7f.html')">
+      <img src="https://m.media-amazon.com/images/M/MV5BYjIyOTY5ZGItYWYwNC00OThjLTkxODAtNDk0NWFjNTNjMWQ0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg">
     </div>
 
-<div class="card" data-title="#"
-    onclick="openPlayer('#')">
-      <img src="#">
+<div class="card" data-title="la cabra"
+    onclick="openPlayer('https://vimeos.net/embed-m0telmxlo7ns.html')">
+      <img src="https://m.media-amazon.com/images/M/MV5BYzE5OTJkOGMtYWFiNi00NTlkLWE3ZWItY2ZlNjkyOWVhMjMyXkEyXkFqcGc@._V1_.jpg">
     </div>
 
-<div class="card" data-title="#"
-    onclick="openPlayer('#')">
-      <img src="#">
+<div class="card" data-title="El lorax"
+    onclick="openPlayer('https://vimeos.net/embed-e6vclgyri15n.html')">
+      <img src="https://m.media-amazon.com/images/M/MV5BOTNiNjc2MzgtMzBhNy00NzU3LTkwOWQtMDA5ODJiNTc2ZDdlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg">
     </div>
 
 </div>
@@ -711,18 +726,7 @@ onclick="openPlayer('https://vimeus.com/e/movie?tmdb=736526&view_key=cz82RD0V9SW
 </section>
 
 
-<!-- POPUP -->
-<div id="serieModal">
-  <div class="modal-content">
 
-    <span onclick="closeSerie()">✕</span>
-
-    <h3 id="serieTitle"></h3>
-
-    <div id="temporadas"></div>
-    <div id="capitulos"></div>
-
-  </div>
 
 
 </div>
@@ -1211,7 +1215,7 @@ window.addEventListener("resize", () => {
   </div>
 
   <div class="collection-card" onclick="openCollection('lotr')">
-    <img src="https://image.tmdb.org/t/p/w500/56zTpe2xvaA2AeU5nD0InTqW0b9.jpg">
+    <img src="https://alfabetajuega.com/hero/2025/01/ydray-picsart_25-01-10_11-39-30-294.jpg?width=768&aspect_ratio=16:9&format=nowebp">
     <p>El Señor de los Anillos</p>
   </div>
 
@@ -1220,6 +1224,31 @@ window.addEventListener("resize", () => {
     <p>John Wick</p>
   </div>
 
+<div class="collection-card" onclick="openCollection('lotr')">
+    <img src="#">
+    <p>#</p>
+  </div>
+
+<div class="collection-card" onclick="openCollection('lotr')">
+    <img src="#">
+    <p>#</p>
+  </div>
+
+<div class="collection-card" onclick="openCollection('lotr')">
+    <img src="#">
+    <p>#</p>
+  </div>
+
+
+<div class="collection-card" onclick="openCollection('lotr')">
+    <img src="#">
+    <p>#</p>
+  </div>
+
+<div class="collection-card" onclick="openCollection('lotr')">
+    <img src="#">
+    <p>#</p>
+  </div>
 </div>
 
 
@@ -1254,7 +1283,7 @@ window.addEventListener("resize", () => {
 
 /* 🔥🔥 ESTILO PRIME VIDEO 🔥🔥 */
 .collection-card{
-  min-width:260px;        /* Más ancho estilo Prime */
+  min-width:200px;        /* Más ancho estilo Prime */
   aspect-ratio:16/9;      /* Forma horizontal */
   background:#1c1c1c;
   border-radius:10px;
@@ -1343,8 +1372,8 @@ window.addEventListener("resize", () => {
 
 /* 🔥🔥 ESTILO PRIME VIDEO RESPONSIVE 🔥🔥 */
 .collection-card{
-  width: 300px;            /* Tamaño perfecto para móvil */
-  height: 160px;            /* Proporción 16:9 */
+  width: 280px;            /* Tamaño perfecto para móvil */
+  height: 140px;            /* Proporción 16:9 */
   background:#1c1c1c;
   border-radius:10px;
   overflow:hidden;
@@ -1414,12 +1443,18 @@ const collections = {
     title: "El Señor de los Anillos",
     movies: [
       { name:"La Comunidad del Anillo",
-        img:"https://image.tmdb.org/t/p/w300/56zTpe2xvaA2AeU5nD0InTqW0b9.jpg",
-        link:"AQUÍ LINK" },
+        img:"https://image.tmdb.org/t/p/w342//9xtH1RmAzQ0rrMBNUMXstb2s3er.jpg",
+        link:"https://vimeos.net/embed-kcr1kibrtihv.html" },
 
       { name:"Las Dos Torres",
-        img:"https://image.tmdb.org/t/p/w300/rrpVySkK7cdWxGZcP4CoJAV2zqK.jpg",
-        link:"AQUÍ LINK" }
+        img:"https://image.tmdb.org/t/p/w342//qHEU9067PL8iIZULg7q58NvoWlS.jpg",
+        link:"https://vimeos.net/embed-4m6p7q5jwr7o.html" },
+
+{ name:"El retorno del rey",
+        img:"https://image.tmdb.org/t/p/w342//mWuFbQrXyLk2kMBKF9TUPtDwuPx.jpg",
+        link:"https://vimeos.net/embed-r2s2rtfplrk0.html" }
+
+
     ]
   },
 
@@ -1516,6 +1551,10 @@ function closePlayer(){
 }
 
 </script>
+
+
+
+
 
 </body>
   </html>
