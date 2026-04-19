@@ -480,9 +480,6 @@ Iniciando
 
       </div>
 
-
-</section>
-
       <div class="card" data-title="Avatar"
       onclick="openPlayer('https://vimeus.com/e/movie?tmdb=83533&view_key=EXDlWfftJFLg5FWKATcDBx6Cg7VXHdXCjYBJabMpR40&theme=purple&loader=v2&overlay=v4&playUI=v3&epanel=v3&splash=v2')">
         <img src="https://images.justwatch.com/poster/336228225/s718/avatar-3.jpg">
@@ -1098,26 +1095,22 @@ document.getElementById("playerFrame").src="";
 </script>
 
 
+
 <script>
+window.addEventListener("load", () => {
 
-setTimeout(function(){
+  setTimeout(() => {
+    const intro = document.getElementById("introCine");
+    intro.style.opacity = "0";
 
-let intro = document.getElementById("introCine");
+    setTimeout(() => {
+      intro.remove(); // 🔥 mejor que display none
+    }, 500);
 
-intro.style.transition="opacity 1s";
+  }, 800); // 🔥 antes 5000 → ahora 0.8s
 
-intro.style.opacity="0";
-
-setTimeout(function(){
-
-intro.style.display="none";
-
-},1000);
-
-},5000);
-
+});
 </script>
-
 
 
 <script>
