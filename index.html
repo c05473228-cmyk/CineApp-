@@ -113,7 +113,7 @@ ul,ol,dl,dl dt,dl dd,h1,h2,h3,h4,h5,h6,p,blockquote,table,input,textarea,button,
 <div class="Container">
 <ul id="home-movies-post" class="MovieList Rows AX A04 B03 C20 D03 E20 Alt">
 
-<li id="post-11607" class="TPostMv post-11607" data-title="nolin">
+<li id="post-11607" class="TPostMv post-11607" <li data-title="Avatar 2">>
 <article class="TPost B"><a href="https://www.google.com/search?q=traductor+ingles+a+espa%C3%B1ol&oq=tr&gs_lcrp=EgZjaHJvbWUqDggBEEUYJxg7GIAEGIoFMgYIABBFGDkyDggBEEUYJxg7GIAEGIoFMg4IAhBFGCcYOxiABBiKBTIPCAMQABhDGLEDGIAEGIoFMg8IBBAAGEMYsQMYgAQYigUyDwgFEAAYQxixAxiABBiKBTIGCAYQRRg8MgwIBxAAGEMYgAQYigUyCggIEAAYsQMYgAQyDwgJEAAYQxixAxiABBiKBTIMCAoQABhDGIAEGIoFMgoICxAAGLEDGIAEMg8IDBAAGEMYsQMYgAQYigUyDAgNEAAYQxiABBiKBTIKCA4QABixAxiABNIBBzkzMGowajmoAgCwAgE&client=ms-android-samsung-rvo1&sourceid=chrome-mobile&ie=UTF-8">
 <div class="Image"><figure class="Objf TpMvPlay AAIco-play_arrow"><img loading="lazy" src="https://i.ibb.co/xF2R6qQ/p334.jpg"></figure>
 <span class="MvIC"><div class="mn-tag"><span class="Qlty">720p</span></span></div>
@@ -1684,124 +1684,90 @@ body {
 
 </style>
 
-
 <script>
-// detectar click en el botón search SIN modificar tu HTML
-document.querySelectorAll('.nav__link').forEach(link => {
-    link.addEventListener("click", function(e){
-        
+// ===== CREAR BUSCADOR AUTOMÁTICO =====
+let overlay = document.createElement("div");
+overlay.id = "searchOverlay";
+overlay.style = `
+position:fixed;
+top:0;
+left:0;
+width:100vw;
+height:100vh;
+background:black;
+display:none;
+z-index:999999;
+padding:20px;
+`;
+
+overlay.innerHTML = `
+<input id="searchInput" placeholder="Buscar..." style="
+width:100%;
+padding:15px;
+font-size:18px;
+border:none;
+outline:none;
+border-radius:8px;
+">
+<div id="searchResults" style="margin-top:20px;"></div>
+`;
+
+document.body.appendChild(overlay);
+
+
+// ===== ABRIR BUSCADOR =====
+document.querySelectorAll(".nav__link").forEach(btn=>{
+    btn.addEventListener("click", function(e){
+
         if(this.getAttribute("href") === "http://action_search"){
             e.preventDefault();
-
-            // 🔥 aquí activas lo que quieras
-            abrirBuscador();
+            overlay.style.display = "block";
+            document.getElementById("searchInput").focus();
         }
 
     });
 });
 
-// función del buscador
-function abrirBuscador(){
-    let overlay = document.getElementById("searchOverlay");
 
-    if(!overlay){
-        // lo crea automáticamente si no existe
-        overlay = document.createElement("div");
-        overlay.id = "searchOverlay";
-        overlay.style = `
-            position:fixed;
-            top:0;
-            left:0;
-            width:100vw;
-            height:100vh;
-            background:#000;
-            z-index:999999;
-            padding:20px;
-        `;
-
-        overlay.innerHTML = `
-            <input id="searchInput" placeholder="Buscar..." style="
-                width:100%;
-                padding:12px;
-                font-size:18px;
-                border-radius:8px;
-                border:none;
-                outline:none;
-            ">
-            <div id="searchResults" style="margin-top:20px;"></div>
-        `;
-
-        document.body.appendChild(overlay);
-
-        // cerrar tocando fuera
-        overlay.addEventListener("click", function(e){
-            if(e.target === overlay){
-                overlay.remove();
-            }
-        });
-
-        // demo búsqueda
-        let data = ["Avengers","Batman","Spider-Man","Interstellar"];
-
-        overlay.querySelector("#searchInput").addEventListener("input", function(){
-            let val = this.value.toLowerCase();
-            let res = data.filter(x => x.toLowerCase().includes(val));
-
-            overlay.querySelector("#searchResults").innerHTML =
-                res.map(r => `<div style="padding:10px 0;border-bottom:1px solid #333;">${r}</div>`).join("")
-                || "Sin resultados";
-        });
+// ===== CERRAR =====
+overlay.addEventListener("click", function(e){
+    if(e.target === overlay){
+        overlay.style.display = "none";
     }
-}
-</script>		
+});
 
-<script>
-// 🔍 obtener tarjetas reales del HTML
-function obtenerPeliculasDesdeTarjetas(){
-    let cards = document.querySelectorAll("[data-title]");
-    let lista = [];
 
-    cards.forEach(card => {
-        let titulo = card.getAttribute("data-title");
-        let link = card.querySelector("a")?.getAttribute("href");
-
-        if(titulo && link){
-            lista.push({
-                titulo: titulo,
-                link: link
-            });
-        }
-    });
-
-    return lista;
-}
-
-// escribir en buscador
+// ===== BUSCAR EN TUS TARJETAS =====
 document.addEventListener("input", function(e){
+
     if(e.target.id === "searchInput"){
-        
+
         let texto = e.target.value.toLowerCase();
-        let peliculas = obtenerPeliculasDesdeTarjetas();
-
-        let filtradas = peliculas.filter(p => 
-            p.titulo.toLowerCase().includes(texto)
-        );
-
+        let cards = document.querySelectorAll("[data-title]");
         let html = "";
 
-        filtradas.forEach(p => {
-            html += `
-            <div onclick="window.location.href='${p.link}'" 
-                 style="padding:12px;border-bottom:1px solid #333;cursor:pointer;">
-                ${p.titulo}
-            </div>`;
+        cards.forEach(card => {
+
+            let titulo = card.getAttribute("data-title");
+            let link = card.querySelector("a")?.href;
+
+            if(titulo && link && titulo.toLowerCase().includes(texto)){
+                html += `
+                <div onclick="location.href='${link}'" 
+                     style="padding:12px;border-bottom:1px solid #333;cursor:pointer;">
+                    ${titulo}
+                </div>`;
+            }
+
         });
 
         document.getElementById("searchResults").innerHTML =
-            html || "<div style='padding:10px;'>No hay resultados</div>";
+            html || "<div style='padding:10px;'>Sin resultados</div>";
     }
+
 });
 </script>
+
 
 
 </body>
