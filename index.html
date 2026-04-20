@@ -1900,6 +1900,68 @@ function detectAdblock() {
     }
 })();
 </script>
+
+
+		<script>
+(async () => {
+
+    // Detectar Brave correctamente
+    const isBrave = await (async () => {
+        if (!navigator.brave) return false;
+        try {
+            return await navigator.brave.isBrave();
+        } catch {
+            return true;
+        }
+    })();
+
+    // Si NO es Brave → permitir TODO
+    if (!isBrave) return;
+
+    // Si es Brave → bloquear pantalla
+    bloquearPantalla();
+
+    function bloquearPantalla(){
+        document.documentElement.innerHTML = "";
+
+        const div = document.createElement("div");
+        div.style.cssText = `
+            position:fixed;
+            top:0;
+            left:0;
+            width:100vw;
+            height:100vh;
+            background:#000;
+            color:#fff;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            text-align:center;
+            z-index:99999999;
+            font-family:sans-serif;
+            padding:20px;
+        `;
+
+        div.innerHTML = `
+            <h1 style="font-size:28px;margin-bottom:15px;">🦁 Navegador Brave Detectado</h1>
+            <p>Desactiva Brave Shields para continuar.</p>
+            <button onclick="location.reload()" style="
+                margin-top:25px;
+                padding:12px 18px;
+                background:red;
+                border:none;
+                color:white;
+                font-size:18px;
+                border-radius:8px;
+            ">Reintentar</button>
+        `;
+
+        document.body.appendChild(div);
+    }
+
+})();
+		</script>
 		
 </body>
                                                                    </html>
