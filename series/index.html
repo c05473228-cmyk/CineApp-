@@ -3,382 +3,278 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SeriesApp</title>
+<title>Series • CineApp</title>
 
 <style>
-/* ==== GLOBAL ==== */
 body{
     margin:0;
     background:#0b0b0f;
-    color:white;
-    font-family:Arial;
-    overflow-x:hidden;
+    color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
 }
 
-/* Header */
-header{
-    padding:20px;
-    font-size:25px;
-    font-weight:bold;
-    background:#141414;
-    position:sticky;
-    top:0;
-    z-index:10;
-    text-align:center;
-}
-
-/* Grid de series */
+/* ====== GRID SERIES ====== */
 .series-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(150px,1fr));
+    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
     gap:15px;
     padding:20px;
 }
 
 .series-card{
-    background:#1d1d1d;
+    background:#111;
     border-radius:10px;
-    overflow:hidden;
+    padding:10px;
     cursor:pointer;
-    transition:0.2s;
+    transition:.2s;
 }
-
 .series-card:hover{
     transform:scale(1.05);
 }
-
 .series-card img{
     width:100%;
-    height:200px;
-    object-fit:cover;
+    border-radius:10px;
+}
+.series-title{
+    text-align:center;
+    margin-top:8px;
+    font-size:15px;
 }
 
-.series-card h3{
-    padding:10px;
-    font-size:16px;
-}
-
-/* Overlays */
-.overlay, #playerOverlay{
+/* ====== PANEL INFO DE SERIE ====== */
+#seriesInfo{
     position:fixed;
     top:0;
     left:0;
     width:100%;
     height:100%;
-    background:rgba(0,0,0,0.92);
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-    padding-top:40px;
-    padding:20px;
-    z-index:9999;
-}
-
-.hidden{
+    background:#000c;
+    backdrop-filter:blur(4px);
     display:none;
-}
-
-/* Caja info */
-.info-box, .player-box{
-    background:#1a1a1a;
+    z-index:9999;
     padding:20px;
-    border-radius:15px;
-    width:90%;
-    max-width:500px;
+    overflow-y:auto;
 }
 
-.info-box img{
-    width:100%;
+.info-box{
+    background:#111;
+    padding:20px;
     border-radius:10px;
 }
 
-.closeBtn{
-    background:red;
-    color:white;
-    border:none;
-    padding:7px 12px;
-    border-radius:5px;
-    cursor:pointer;
+.closeInfo{
     float:right;
-    margin-bottom:10px;
-}
-
-/* Episodios */
-.episode{
-    padding:10px;
-    background:#242424;
-    margin-top:10px;
-    border-radius:8px;
+    background:red;
+    padding:10px 13px;
+    border-radius:50%;
+    font-size:18px;
+    border:none;
     cursor:pointer;
 }
 
-.episode:hover{
-    background:#2f2f2f;
+/* ====== LISTAS ====== */
+.season-title{
+    font-size:18px;
+    margin-top:10px;
+    font-weight:bold;
+}
+.episode-btn{
+    width:100%;
+    padding:10px;
+    margin:5px 0;
+    background:#222;
+    border:none;
+    color:white;
+    border-radius:6px;
+    text-align:left;
+    cursor:pointer;
 }
 
-/* Player */
-.player-box iframe{
+/* ====== REPRODUCTOR ====== */
+#playerOverlay{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100vw;
+    height:100vh;
+    background:rgba(0,0,0,0.85);
+    display:none;
+    z-index:999999;
+    align-items:center;
+    justify-content:center;
+}
+
+#playerBox{
+    width:90%;
+    max-width:900px;
+    background:#111;
+    border-radius:10px;
+    padding:10px;
+    position:relative;
+}
+
+#playerFrame{
     width:100%;
-    height:300px;
+    height:55vh;
     border:none;
+    border-radius:10px;
+}
+
+#closePlayer{
+    position:absolute;
+    top:-15px;
+    right:-15px;
+    background:red;
+    border:none;
+    color:#fff;
+    padding:10px 13px;
+    border-radius:50%;
+    font-size:20px;
+    cursor:pointer;
 }
 </style>
-
 </head>
 <body>
 
-<header>
-    SERIES APP
-</header>
+<h2 style="padding:20px;">Catálogo de Series</h2>
 
-<!-- ============== CATÁLOGO ============== -->
-<div id="seriesContainer" class="series-grid"></div>
+<!-- ===================== GRID ===================== -->
+<div class="series-grid" id="seriesGrid"></div>
 
-<!-- ============== INFO DE SERIE ============== -->
-<div id="seriesInfo" class="overlay hidden">
-    <div class="info-box">
-        <button class="closeBtn" onclick="closeInfo()">✖</button>
-        <img id="infoImg">
-        <h2 id="infoTitle"></h2>
-        <p id="infoDesc"></p>
-
-        <h3>Temporadas</h3>
-        <select id="seasonSelect" onchange="renderEpisodes()"></select>
-
-        <div id="episodesList"></div>
-    </div>
+<!-- ===================== PANEL DE INFO ===================== -->
+<div id="seriesInfo">
+    <div class="info-box" id="infoContent"></div>
 </div>
 
-<!-- ============== PLAYER ============== -->
-<div id="playerOverlay" class="hidden">
-    <div class="player-box">
-        <button class="closeBtn" onclick="closePlayer()">✖</button>
+<!-- ===================== REPRODUCTOR ===================== -->
+<div id="playerOverlay">
+    <div id="playerBox">
+        <button id="closePlayer">✖</button>
         <iframe id="playerFrame" allowfullscreen></iframe>
     </div>
 </div>
 
-
 <script>
-// =============================
-// BASE DE DATOS DE SERIES
-// =============================
-const series = [
-
-{
-title:"Breaking Bad",
-img:"https://i.imgur.com/0Zz9K4c.jpeg",
-desc:"Un profesor de química se convierte en narcotraficante.",
-seasons:[
-{season:1,episodes:[
-{title:"1x01 Pilot",url:"https://www.youtube.com/embed/HhesaQXLuRY"},
-{title:"1x02 Cat's in the Bag",url:"https://www.youtube.com/embed/5NPBIwQyPWE"},
-{title:"1x03 ...And the Bag's in the River",url:"https://www.youtube.com/embed/GN5ZvwItC2A"}
-]},
-{season:2,episodes:[
-{title:"2x01 Seven Thirty-Seven",url:"https://www.youtube.com/embed/HhesaQXLuRY"},
-{title:"2x02 Grilled",url:"https://www.youtube.com/embed/5NPBIwQyPWE"}
-]}
-]
-},
-
-{
-title:"Stranger Things",
-img:"https://i.imgur.com/vgS2Hqg.jpeg",
-desc:"Niños enfrentan fuerzas sobrenaturales.",
-seasons:[
-{season:1,episodes:[
-{title:"1x01 La desaparición",url:"https://www.youtube.com/embed/b9EkMc79ZSU"},
-{title:"1x02 La loca de la calle",url:"https://www.youtube.com/embed/b9EkMc79ZSU"}
-]},
-{season:2,episodes:[
-{title:"2x01 MADMAX",url:"https://www.youtube.com/embed/b9EkMc79ZSU"}
-]}
-]
-},
-
-{
-title:"The Walking Dead",
-img:"https://i.imgur.com/dV1JTvE.jpeg",
-desc:"Supervivencia en un mundo zombie.",
-seasons:[
-{season:1,episodes:[
-{title:"1x01 Days Gone Bye",url:"https://www.youtube.com/embed/sfAc2U20uyg"},
-{title:"1x02 Guts",url:"https://www.youtube.com/embed/sfAc2U20uyg"}
-]}
-]
-},
-
-{
-title:"Game of Thrones",
-img:"https://i.imgur.com/N4Qe2hk.jpeg",
-desc:"Lucha por el trono de hierro.",
-seasons:[
-{season:1,episodes:[
-{title:"1x01 Winter Is Coming",url:"https://www.youtube.com/embed/bjqEWgDVPe0"},
-{title:"1x02 The Kingsroad",url:"https://www.youtube.com/embed/bjqEWgDVPe0"}
-]}
-]
-},
-
-{
-title:"Naruto",
-img:"https://i.imgur.com/9z3XGQZ.jpeg",
-desc:"Un ninja busca convertirse en Hokage.",
-seasons:[
-{season:1,episodes:[
-{title:"1x01 Naruto Uzumaki",url:"https://www.youtube.com/embed/4t__wczfpRI"},
-{title:"1x02 Mi nombre es Konohamaru",url:"https://www.youtube.com/embed/4t__wczfpRI"},
-{title:"1x03 Sasuke y Sakura",url:"https://www.youtube.com/embed/4t__wczfpRI"}
-]}
-]
-},
-
-{
-title:"The Boys",
-img:"https://i.imgur.com/5mXoKXk.jpeg",
-desc:"Superhéroes corruptos enfrentan consecuencias.",
-seasons:[
-{season:1,episodes:[
-{title:"1x01 The Name of the Game",url:"https://www.youtube.com/embed/06rueu_fh30"},
-{title:"1x02 Cherry",url:"https://www.youtube.com/embed/06rueu_fh30"}
-]}
-]
-},
-
-{
-title:"Vikings",
-img:"https://i.imgur.com/Xz7K6dU.jpeg",
-desc:"Historia de Ragnar Lothbrok.",
-seasons:[
-{season:1,episodes:[
-{title:"1x01 Rites of Passage",url:"https://www.youtube.com/embed/9GgxinPwAGc"},
-{title:"1x02 Wrath of the Northmen",url:"https://www.youtube.com/embed/9GgxinPwAGc"}
-]}
-]
-},
-
-{
-title:"Peaky Blinders",
-img:"https://i.imgur.com/j5K8X6C.jpeg",
-desc:"Una familia criminal en Inglaterra.",
-seasons:[
-{season:1,episodes:[
-{title:"1x01 Episodio 1",url:"https://www.youtube.com/embed/oVzVdvGIC7U"},
-{title:"1x02 Episodio 2",url:"https://www.youtube.com/embed/oVzVdvGIC7U"}
-]}
-]
-},
-
-{
-title:"Rick and Morty",
-img:"https://i.imgur.com/6o5V3mF.jpeg",
-desc:"Aventuras locas en el multiverso.",
-seasons:[
-{season:1,episodes:[
-{title:"1x01 Pilot",url:"https://www.youtube.com/embed/6lUu4d0uS0k"},
-{title:"1x02 Lawnmower Dog",url:"https://www.youtube.com/embed/6lUu4d0uS0k"}
-]}
-]
-},
-
-{
-title:"Dark",
-img:"https://i.imgur.com/Zk0b8jX.jpeg",
-desc:"Misterio y viajes en el tiempo.",
-seasons:[
-{season:1,episodes:[
-{title:"1x01 Secretos",url:"https://www.youtube.com/embed/rrwycJ08PSA"},
-{title:"1x02 Mentiras",url:"https://www.youtube.com/embed/rrwycJ08PSA"}
-]}
-]
-}
-
+/* ===================== BASE DE SERIES ===================== */
+const seriesData = [
+    {
+        title:"Breaking Bad",
+        poster:"https://i.imgur.com/NPn4yqN.jpeg",
+        description:"Un profesor de química se convierte en fabricante de metanfetamina.",
+        seasons:[
+            {
+                name:"Temporada 1",
+                episodes:[
+                    {title:"Episodio 1", url:"https://example.com/bb1e1"},
+                    {title:"Episodio 2", url:"https://example.com/bb1e2"},
+                    {title:"Episodio 3", url:"https://example.com/bb1e3"}
+                ]
+            },
+            {
+                name:"Temporada 2",
+                episodes:[
+                    {title:"Episodio 1", url:"https://example.com/bb2e1"},
+                    {title:"Episodio 2", url:"https://example.com/bb2e2"}
+                ]
+            }
+        ]
+    },
+    {
+        title:"The Walking Dead",
+        poster:"https://i.imgur.com/Zq2qQ2v.jpeg",
+        description:"Un grupo de sobrevivientes enfrenta un apocalipsis zombie.",
+        seasons:[
+            {
+                name:"Temporada 1",
+                episodes:[
+                    {title:"Episodio 1", url:"https://example.com/twd1e1"},
+                    {title:"Episodio 2", url:"https://example.com/twd1e2"}
+                ]
+            }
+        ]
+    },
+    {
+        title:"Game of Thrones",
+        poster:"https://i.imgur.com/OD4Z0hr.jpeg",
+        description:"Reinos luchan por el trono de hierro.",
+        seasons:[
+            {
+                name:"Temporada 1",
+                episodes:[
+                    {title:"Episodio 1", url:"https://example.com/got1e1"},
+                    {title:"Episodio 2", url:"https://example.com/got1e2"}
+                ]
+            }
+        ]
+    },
+    {
+        title:"Stranger Things",
+        poster:"https://i.imgur.com/Y3eN8JV.jpeg",
+        description:"Un niño desaparece y se descubre un mundo paralelo.",
+        seasons:[
+            {
+                name:"Temporada 1",
+                episodes:[
+                    {title:"Episodio 1", url:"https://example.com/st1e1"},
+                    {title:"Episodio 2", url:"https://example.com/st1e2"}
+                ]
+            }
+        ]
+    }
 ];
 
+/* ===================== GENERAR GRID ===================== */
+const grid = document.getElementById("seriesGrid");
 
-// =============================
-// RENDER DEL CATÁLOGO
-// =============================
-const container = document.getElementById("seriesContainer");
-
-series.forEach((s, index) => {
-    let card = document.createElement("div");
-    card.className = "series-card";
-    card.innerHTML = `
-        <img src="${s.img}">
-        <h3>${s.title}</h3>
+seriesData.forEach((serie, index) => {
+    grid.innerHTML += `
+        <div class="series-card" onclick="openSeries(${index})">
+            <img src="${serie.poster}">
+            <div class="series-title">${serie.title}</div>
+        </div>
     `;
-    card.onclick = () => openInfo(index);
-    container.appendChild(card);
 });
 
-// =============================
-//  ABRIR INFO
-// =============================
-let currentSeries = 0;
+/* ===================== ABRIR INFO ===================== */
+function openSeries(i){
+    const box = seriesData[i];
 
-function openInfo(i){
-    currentSeries = i;
-    const s = series[i];
+    let html = `
+        <button class="closeInfo" onclick="closeInfo()">✖</button>
+        <h2>${box.title}</h2>
+        <p>${box.description}</p>
+        <hr>
+    `;
 
-    document.getElementById("infoImg").src = s.img;
-    document.getElementById("infoTitle").innerText = s.title;
-    document.getElementById("infoDesc").innerText = s.desc;
-
-    let seasonSelect = document.getElementById("seasonSelect");
-    seasonSelect.innerHTML = "";
-
-    s.seasons.forEach(season => {
-        let opt = document.createElement("option");
-        opt.value = season.season;
-        opt.textContent = "Temporada " + season.season;
-        seasonSelect.appendChild(opt);
+    box.seasons.forEach(season => {
+        html += `<div class="season-title">${season.name}</div>`;
+        season.episodes.forEach(ep => {
+            html += `
+                <button class="episode-btn" onclick="playEpisode('${ep.url}')">
+                    ▶ ${ep.title}
+                </button>
+            `;
+        });
     });
 
-    renderEpisodes();
-
-    document.getElementById("seriesInfo").classList.remove("hidden");
+    document.getElementById("infoContent").innerHTML = html;
+    document.getElementById("seriesInfo").style.display = "block";
 }
 
 function closeInfo(){
-    document.getElementById("seriesInfo").classList.add("hidden");
+    document.getElementById("seriesInfo").style.display = "none";
 }
 
-
-// =============================
-// EPISODIOS
-// =============================
-function renderEpisodes(){
-    const s = series[currentSeries];
-    const seasonNumber = parseInt(document.getElementById("seasonSelect").value);
-    const season = s.seasons.find(se => se.season === seasonNumber);
-
-    const list = document.getElementById("episodesList");
-    list.innerHTML = "";
-
-    season.episodes.forEach(ep => {
-        let div = document.createElement("div");
-        div.className = "episode";
-        div.innerText = ep.title;
-        div.onclick = () => openPlayer(ep.url);
-        list.appendChild(div);
-    });
-}
-
-
-// =============================
-// PLAYER
-// =============================
-function openPlayer(url){
+/* ===================== REPRODUCTOR ===================== */
+function playEpisode(url){
     document.getElementById("playerFrame").src = url;
-    document.getElementById("playerOverlay").classList.remove("hidden");
+    document.getElementById("playerOverlay").style.display = "flex";
 }
 
-function closePlayer(){
+document.getElementById("closePlayer").addEventListener("click", ()=>{
     document.getElementById("playerFrame").src = "";
-    document.getElementById("playerOverlay").classList.add("hidden");
-}
-
+    document.getElementById("playerOverlay").style.display = "none";
+});
 </script>
 
 </body>
