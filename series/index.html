@@ -13,6 +13,20 @@ body{
     font-family:Arial,Helvetica,sans-serif;
 }
 
+/* ==== BUSCADOR ==== */
+#searchBar{
+    width:90%;
+    margin:15px auto;
+    display:block;
+    padding:12px 15px;
+    border-radius:10px;
+    font-size:16px;
+    border:none;
+    outline:none;
+    background:#111;
+    color:white;
+}
+
 /* ====== GRID SERIES ====== */
 .series-grid{
     display:grid;
@@ -41,7 +55,7 @@ body{
     font-size:15px;
 }
 
-/* ====== PANEL INFO DE SERIE ====== */
+/* ====== PANEL INFO ====== */
 #seriesInfo{
     position:fixed;
     top:0;
@@ -69,24 +83,6 @@ body{
     border-radius:50%;
     font-size:18px;
     border:none;
-    cursor:pointer;
-}
-
-/* ====== LISTAS ====== */
-.season-title{
-    font-size:18px;
-    margin-top:10px;
-    font-weight:bold;
-}
-.episode-btn{
-    width:100%;
-    padding:10px;
-    margin:5px 0;
-    background:#222;
-    border:none;
-    color:white;
-    border-radius:6px;
-    text-align:left;
     cursor:pointer;
 }
 
@@ -138,6 +134,9 @@ body{
 
 <h2 style="padding:20px;">Catálogo de Series</h2>
 
+<!-- ========== BUSCADOR ========== -->
+<input type="text" id="searchBar" placeholder="Buscar series..." onkeyup="searchSeries()">
+
 <!-- ===================== GRID ===================== -->
 <div class="series-grid" id="seriesGrid"></div>
 
@@ -166,15 +165,7 @@ const seriesData = [
                 name:"Temporada 1",
                 episodes:[
                     {title:"Episodio 1", url:"https://example.com/bb1e1"},
-                    {title:"Episodio 2", url:"https://example.com/bb1e2"},
-                    {title:"Episodio 3", url:"https://example.com/bb1e3"}
-                ]
-            },
-            {
-                name:"Temporada 2",
-                episodes:[
-                    {title:"Episodio 1", url:"https://example.com/bb2e1"},
-                    {title:"Episodio 2", url:"https://example.com/bb2e2"}
+                    {title:"Episodio 2", url:"https://example.com/bb1e2"}
                 ]
             }
         ]
@@ -220,22 +211,48 @@ const seriesData = [
                 ]
             }
         ]
+    },
+    {
+        title:"Peaky Blinders",
+        poster:"https://i.imgur.com/n4XZdkp.jpeg",
+        description:"Una familia de gánsteres domina Birmingham.",
+        seasons:[
+            {
+                name:"Temporada 1",
+                episodes:[
+                    {title:"Episodio 1", url:"https://example.com/pb1e1"},
+                    {title:"Episodio 2", url:"https://example.com/pb1e2"}
+                ]
+            }
+        ]
     }
 ];
 
 /* ===================== GENERAR GRID ===================== */
 const grid = document.getElementById("seriesGrid");
 
-seriesData.forEach((serie, index) => {
-    grid.innerHTML += `
-        <div class="series-card" onclick="openSeries(${index})">
-            <img src="${serie.poster}">
-            <div class="series-title">${serie.title}</div>
-        </div>
-    `;
-});
+function loadGrid(list){
+    grid.innerHTML = "";
+    list.forEach((serie, index) => {
+        grid.innerHTML += `
+            <div class="series-card" onclick="openSeries(${seriesData.indexOf(serie)})">
+                <img src="${serie.poster}">
+                <div class="series-title">${serie.title}</div>
+            </div>
+        `;
+    });
+}
 
-/* ===================== ABRIR INFO ===================== */
+loadGrid(seriesData);
+
+/* ===================== BUSCADOR ===================== */
+function searchSeries(){
+    const text = document.getElementById("searchBar").value.toLowerCase();
+    const filtered = seriesData.filter(s => s.title.toLowerCase().includes(text));
+    loadGrid(filtered);
+}
+
+/* ===================== PANEL INFO ===================== */
 function openSeries(i){
     const box = seriesData[i];
 
