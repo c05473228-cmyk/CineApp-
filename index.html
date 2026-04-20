@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
  <head>
-  <title>CineMax</title>
+  <title>CineApp</title>
   
   
   
@@ -1816,6 +1816,81 @@ let ocultar = () => {
 
 window.addEventListener("scroll", ocultar);
 </script>
+
+
+<div id="ad-detector" class="ads ad-banner ad-unit ad-container" style="
+  position:absolute;
+  left:-9999px;
+  width:1px;
+  height:1px;
+"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const bait = document.getElementById("ad-detector");
+    let adblock = false;
+
+    // DETECCIÓN
+    if (!bait || bait.offsetParent === null || bait.offsetHeight === 0) {
+        adblock = true;
+    }
+
+    const style = window.getComputedStyle(bait);
+    if (style.display === "none" || style.visibility === "hidden") {
+        adblock = true;
+    }
+
+    // BLOQUEO TOTAL
+    if (adblock) {
+        bloquearPantalla();
+    }
+
+});
+
+function bloquearPantalla(){
+
+    const bloqueo = document.createElement("div");
+
+    bloqueo.style.cssText = `
+        position:fixed;
+        top:0;
+        left:0;
+        width:100vw;
+        height:100vh;
+        background:#000;
+        color:#fff;
+        z-index:999999;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        text-align:center;
+        font-family:sans-serif;
+        padding:20px;
+    `;
+
+    bloqueo.innerHTML = `
+        <h1 style="font-size:30px;margin-bottom:15px;">🚫 AdBlock Detectado</h1>
+        <p style="font-size:18px;opacity:0.8;">
+        Desactiva tu bloqueador para continuar viendo el contenido.
+        </p>
+        <button onclick="location.reload()" style="
+            margin-top:25px;
+            padding:12px 20px;
+            background:red;
+            border:none;
+            color:white;
+            font-size:18px;
+            border-radius:8px;
+        ">Ya lo desactivé</button>
+    `;
+
+    document.body.innerHTML = "";
+    document.body.appendChild(bloqueo);
+
+}
+</script>		
 		
 </body>
                                                                    </html>
