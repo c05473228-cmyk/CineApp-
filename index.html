@@ -1695,18 +1695,15 @@ body {
 </style>
 
 <script>
-// ===== ESPERAR A QUE TODO CARGUE =====
-window.addEventListener("load", function(){
+window.addEventListener("load", () => {
 
-// ===== CREAR BUSCADOR =====
-let overlay = document.createElement("div");
+// === CREA EL BUSCADOR ===
+const overlay = document.createElement("div");
 overlay.id = "searchOverlay";
 overlay.style = `
 position:fixed;
-top:0;
-left:0;
-width:100vw;
-height:100vh;
+top:0; left:0;
+width:100vw; height:100vh;
 background:black;
 display:none;
 z-index:999999;
@@ -1715,73 +1712,58 @@ padding:20px;
 
 overlay.innerHTML = `
 <input id="searchInput" placeholder="Buscar..." style="
-width:100%;
-padding:15px;
-font-size:18px;
-border:none;
-outline:none;
-border-radius:8px;
-">
+width:100%; padding:15px;
+font-size:18px; border:none;
+border-radius:8px; outline:none;">
 <div id="searchResults" style="margin-top:20px;"></div>
 `;
 
 document.body.appendChild(overlay);
 
 
-// ===== ABRIR BUSCADOR (MEJOR DETECCIÓN) =====
-document.body.addEventListener("click", function(e){
+// === ABRIR BUSCADOR ===
+document.body.addEventListener("click", e => {
+    const btn = e.target.closest("a");
+    if (!btn) return;
 
-    let btn = e.target.closest("a");
-
-    if(btn && btn.getAttribute("href") === "http://action_search"){
+    if (btn.getAttribute("href") === "http://action_search") {
         e.preventDefault();
         overlay.style.display = "block";
         document.getElementById("searchInput").focus();
     }
-
 });
 
-
-// ===== CERRAR =====
-overlay.addEventListener("click", function(e){
-    if(e.target === overlay){
-        overlay.style.display = "none";
-    }
+// === CERRAR ===
+overlay.addEventListener("click", e => {
+    if (e.target === overlay) overlay.style.display = "none";
 });
 
+// === BUSCAR ===
+document.addEventListener("input", e => {
+    if (e.target.id !== "searchInput") return;
 
-// ===== BUSCADOR ULTRA COMPATIBLE =====
-document.addEventListener("input", function(e){
+    const texto = e.target.value.toLowerCase();
+    let html = "";
 
-    if(e.target.id === "searchInput"){
+    const cards = document.querySelectorAll("[data-title]");
 
-        let texto = e.target.value.toLowerCase();
-        let html = "";
+    cards.forEach(card => {
+        const titulo = card.getAttribute("data-title");
+        const link = card.querySelector("a")?.href;
 
-        let cards = document.querySelectorAll("[data-title]");
+        if (!titulo || !link) return;
 
-        cards.forEach(card => {
+        if (titulo.toLowerCase().includes(texto)) {
+            html += `
+            <div onclick="location.href='${link}'"
+                style="padding:12px; border-bottom:1px solid #333; cursor:pointer;">
+                ${titulo}
+            </div>`;
+        }
+    });
 
-            let titulo = card.getAttribute("data-title");
-
-            // 🔥 busca link aunque esté profundo
-            let linkTag = card.querySelector("a");
-            let link = linkTag ? linkTag.href : null;
-
-            if(titulo && link && titulo.toLowerCase().includes(texto)){
-                html += `
-                <div onclick="location.href='${link}'" 
-                     style="padding:12px;border-bottom:1px solid #333;cursor:pointer;">
-                    ${titulo}
-                </div>`;
-            }
-
-        });
-
-        document.getElementById("searchResults").innerHTML =
-            html || "<div style='padding:10px;'>Sin resultados</div>";
-    }
-
+    document.getElementById("searchResults").innerHTML =
+        html || `<div style="padding:12px;">Sin resultados</div>`;
 });
 
 });
