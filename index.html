@@ -1686,75 +1686,52 @@ body {
 
 
 <script>
-// detectar click en el botón search SIN modificar tu HTML
-document.querySelectorAll('.nav__link').forEach(link => {
-    link.addEventListener("click", function(e){
-        
-        if(this.getAttribute("href") === "http://action_search"){
-            e.preventDefault();
+// 🔍 obtener tarjetas reales del HTML
+function obtenerPeliculasDesdeTarjetas(){
+    let cards = document.querySelectorAll("[data-title]");
+    let lista = [];
 
-            // 🔥 aquí activas lo que quieras
-            abrirBuscador();
+    cards.forEach(card => {
+        let titulo = card.getAttribute("data-title");
+        let link = card.querySelector("a")?.getAttribute("href");
+
+        if(titulo && link){
+            lista.push({
+                titulo: titulo,
+                link: link
+            });
         }
-
     });
-});
 
-// función del buscador
-function abrirBuscador(){
-    let overlay = document.getElementById("searchOverlay");
-
-    if(!overlay){
-        // lo crea automáticamente si no existe
-        overlay = document.createElement("div");
-        overlay.id = "searchOverlay";
-        overlay.style = `
-            position:fixed;
-            top:0;
-            left:0;
-            width:100vw;
-            height:100vh;
-            background:#000;
-            z-index:999999;
-            padding:20px;
-        `;
-
-        overlay.innerHTML = `
-            <input id="searchInput" placeholder="Buscar..." style="
-                width:100%;
-                padding:12px;
-                font-size:18px;
-                border-radius:8px;
-                border:none;
-                outline:none;
-            ">
-            <div id="searchResults" style="margin-top:20px;"></div>
-        `;
-
-        document.body.appendChild(overlay);
-
-        // cerrar tocando fuera
-        overlay.addEventListener("click", function(e){
-            if(e.target === overlay){
-                overlay.remove();
-            }
-        });
-
-        // demo búsqueda
-        let data = ["Avengers","Batman","Spider-Man","Interstellar"];
-
-        overlay.querySelector("#searchInput").addEventListener("input", function(){
-            let val = this.value.toLowerCase();
-            let res = data.filter(x => x.toLowerCase().includes(val));
-
-            overlay.querySelector("#searchResults").innerHTML =
-                res.map(r => `<div style="padding:10px 0;border-bottom:1px solid #333;">${r}</div>`).join("")
-                || "Sin resultados";
-        });
-    }
+    return lista;
 }
-</script>
 
+// escribir en buscador
+document.addEventListener("input", function(e){
+    if(e.target.id === "searchInput"){
+        
+        let texto = e.target.value.toLowerCase();
+        let peliculas = obtenerPeliculasDesdeTarjetas();
+
+        let filtradas = peliculas.filter(p => 
+            p.titulo.toLowerCase().includes(texto)
+        );
+
+        let html = "";
+
+        filtradas.forEach(p => {
+            html += `
+            <div onclick="window.location.href='${p.link}'" 
+                 style="padding:12px;border-bottom:1px solid #333;cursor:pointer;">
+                ${p.titulo}
+            </div>`;
+        });
+
+        document.getElementById("searchResults").innerHTML =
+            html || "<div style='padding:10px;'>No hay resultados</div>";
+    }
+});
+</script>
 
 
 </body>
