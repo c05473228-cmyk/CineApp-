@@ -1760,5 +1760,55 @@ document.addEventListener("input", e => {
 </script>
 
 
+<style>
+#swipeUpAnim {
+  position: fixed;
+  bottom: 110px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999;
+  opacity: 0.8;
+}
+
+/* Contenedor flecha */
+#swipeUpAnim .arrow {
+  width: 22px;
+  height: 22px;
+  border-left: 3px solid white;
+  border-bottom: 3px solid white;
+  transform: rotate(135deg);
+  animation: swipeUp 1.2s infinite;
+}
+
+@keyframes swipeUp {
+  0% {
+    transform: rotate(135deg) translate(0, 0);
+    opacity: 0.2;
+  }
+  50% {
+    transform: rotate(135deg) translate(0, -15px);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(135deg) translate(0, 0);
+    opacity: 0.2;
+  }
+}
+</style>
+
+<div id="swipeUpAnim">
+  <div class="arrow"></div>
+</div>
+
+<script>
+// Ocultar animación cuando el usuario hace scroll
+function hideSwipeAnim() {
+    document.getElementById("swipeUpAnim").style.display = "none";
+    window.removeEventListener("scroll", hideSwipeAnim);
+}
+
+window.addEventListener("scroll", hideSwipeAnim);
+</script>
+		
 </body>
                                                                    </html>
