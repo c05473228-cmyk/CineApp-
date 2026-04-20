@@ -267,8 +267,10 @@ width:100vw;
 height:100vh;
 background:#000;
 display:none;
-z-index:99999;
+z-index:9999999;
 }
+
+
 
 .playerWrapper{
 position:absolute;
@@ -428,6 +430,18 @@ color:red;
 }
 
 
+.section-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.section-header span{
+  font-size:14px;
+  color:#7b3cff;
+  cursor:pointer;
+}
+
 
 
 </style>
@@ -471,7 +485,10 @@ Iniciando
 
 
 <div class="section">
-    <h2>Populares</h2>
+    <div class="section-header">
+  <h2>Populares</h2>
+  <span onclick="openFullList(this)">Ver todo</span>
+</div>
     <div class="carousel">
 
       <div class="card" data-title="el guardian últimorefugio"
@@ -608,7 +625,10 @@ onclick="openPlayer('#')">
 
 
 <div class="section">
-<h2>Acción</h2>
+<div class="section-header">
+  <h2>Acción</h2>
+  <span onclick="openFullList(this)">Ver todo</span>
+</div>
   <div class="carousel">
 
     <div class="card" data-title="El engaño"
@@ -685,7 +705,10 @@ onclick="openPlayer('https://vimeus.com/e/movie?tmdb=736526&view_key=cz82RD0V9SW
 </div>
 
 <div class="section">
-<h2>Animación</h2>
+<div class="section-header">
+  <h2>Animación</h2>
+  <span onclick="openFullList(this)">Ver todo</span>
+</div>
   <div class="carousel">
 
     <div class="card" data-title="Mario galaxi"
@@ -961,6 +984,39 @@ to{transform:scale(1);opacity:1}
 #bottomMenu button.active{
   opacity:1;
   border-bottom:2px solid red;
+}
+
+#fullListView{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#0b0b0f;
+  z-index:99999;
+  padding:20px;
+  overflow-y:auto;
+}
+
+#fullListView span{
+  position:fixed;
+  top:20px;
+  left:20px;
+  font-size:28px;
+  cursor:pointer;
+}
+
+#fullListGrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin-top:60px;
+}
+
+#fullListGrid .card{
+  width:100%;
+  height:200px;
 }
 
 </style>
@@ -1546,9 +1602,145 @@ function closePlayer(){
 </script>
 
 
+<script>
+function openFullList(el){
+
+  // Buscar el carrusel más cercano
+  let parent = el.parentElement;
+  let carousel = null;
+
+  while(parent){
+    carousel = parent.querySelector(".carousel");
+    if(carousel) break;
+    parent = parent.parentElement;
+  }
+
+  if(!carousel){
+    alert("No se encontró el carrusel");
+    return;
+  }
+
+  // Título
+  const h2 = parent.querySelector("h2");
+  document.getElementById("fullListTitle").innerText =
+    h2 ? h2.innerText : "Películas";
+
+  // Clonar las tarjetas del carrusel
+  const cards = carousel.querySelectorAll(".card");
+  const grid = document.getElementById("fullListGrid");
+
+  grid.innerHTML = "";
+  cards.forEach(card=>{
+    const clone = card.cloneNode(true);
+
+    // 🔥 Re-crear acción de la tarjeta
+    clone.addEventListener("click", ()=>{
+      card.click();
+    });
+
+    grid.appendChild(clone);
+  });
+
+  // Abrir lista completa
+  document.getElementById("fullListView").style.display = "block";
+}
+</script>
+
+
+<script>function closeFullList(){
+  document.getElementById("fullListView").style.display = "none";
+}
+</script>
 
 
 
+<!-- 🔥 FULL LIST VIEW (Nueva ventana) -->
+<div id="fullListView" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0b0b0f;
+    z-index: 999999;
+    display: none;
+    overflow-y: auto;
+
+    /* 🔥 CAMBIO CLAVE */
+    padding: 70px 20px 20px;
+">
+
+   <div style="
+    position: sticky;
+    top: 0;
+    background: #0b0b0f;
+    padding: 10px 0;
+    z-index: 10000000;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+">
+        <h2 id="fullListTitle"></h2>
+        <button onclick='closeFullList()' style="
+            background:none;
+            color:white;
+            font-size:18px;
+            border:none;
+        ">Cerrar ✖</button>
+    </div>
+
+    <div id="fullListGrid" style="
+        display:grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap:15px;
+        margin-top:20px;
+    "></div>
+
+</div>
+
+
+
+<script>
+// 🔥 Forzar z-index correcto
+document.addEventListener("DOMContentLoaded", () => {
+    const fullList = document.getElementById("fullListView");
+    const player = document.getElementById("playerOverlay");
+
+    if(fullList){
+        fullList.style.zIndex = "9999";
+    }
+
+    if(player){
+        player.style.zIndex = "999999999";
+    }
+});
+
+// 🔥 Mejorar openPlayer para que NO quede tapado
+function openPlayer(url){
+    // Abrir reproductor
+    const playerFrame = document.getElementById("playerFrame");
+    const overlay = document.getElementById("playerOverlay");
+    const fullList = document.getElementById("fullListView");
+
+    // Ocultar lista si está abierta
+    if(fullList){
+        fullList.style.display = "none";
+    }
+
+    // Mostrar reproductor
+    overlay.style.display = "block";
+    playerFrame.src = url;
+}
+
+// 🔥 Cerrar reproductor
+function closePlayer(){
+    const overlay = document.getElementById("playerOverlay");
+    const playerFrame = document.getElementById("playerFrame");
+
+    overlay.style.display = "none";
+    playerFrame.src = "";
+}
+</script>
 </body>
   </html>
 
