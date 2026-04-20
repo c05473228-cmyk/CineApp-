@@ -1685,7 +1685,10 @@ body {
 </style>
 
 <script>
-// ===== CREAR BUSCADOR AUTOMÁTICO =====
+// ===== ESPERAR A QUE TODO CARGUE =====
+window.addEventListener("load", function(){
+
+// ===== CREAR BUSCADOR =====
 let overlay = document.createElement("div");
 overlay.id = "searchOverlay";
 overlay.style = `
@@ -1715,17 +1718,17 @@ border-radius:8px;
 document.body.appendChild(overlay);
 
 
-// ===== ABRIR BUSCADOR =====
-document.querySelectorAll(".nav__link").forEach(btn=>{
-    btn.addEventListener("click", function(e){
+// ===== ABRIR BUSCADOR (MEJOR DETECCIÓN) =====
+document.body.addEventListener("click", function(e){
 
-        if(this.getAttribute("href") === "http://action_search"){
-            e.preventDefault();
-            overlay.style.display = "block";
-            document.getElementById("searchInput").focus();
-        }
+    let btn = e.target.closest("a");
 
-    });
+    if(btn && btn.getAttribute("href") === "http://action_search"){
+        e.preventDefault();
+        overlay.style.display = "block";
+        document.getElementById("searchInput").focus();
+    }
+
 });
 
 
@@ -1737,19 +1740,23 @@ overlay.addEventListener("click", function(e){
 });
 
 
-// ===== BUSCAR EN TUS TARJETAS =====
+// ===== BUSCADOR ULTRA COMPATIBLE =====
 document.addEventListener("input", function(e){
 
     if(e.target.id === "searchInput"){
 
         let texto = e.target.value.toLowerCase();
-        let cards = document.querySelectorAll("[data-title]");
         let html = "";
+
+        let cards = document.querySelectorAll("[data-title]");
 
         cards.forEach(card => {
 
             let titulo = card.getAttribute("data-title");
-            let link = card.querySelector("a")?.href;
+
+            // 🔥 busca link aunque esté profundo
+            let linkTag = card.querySelector("a");
+            let link = linkTag ? linkTag.href : null;
 
             if(titulo && link && titulo.toLowerCase().includes(texto)){
                 html += `
@@ -1766,8 +1773,9 @@ document.addEventListener("input", function(e){
     }
 
 });
-</script>
 
+});
+</script>
 
 
 </body>
