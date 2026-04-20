@@ -1842,66 +1842,64 @@ window.addEventListener("scroll", ocultar);
 
 
 
-		<script>
+		<div id="adblockOverlay" 
+     style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh;
+            background:#000; color:white; font-size:22px; text-align:center; padding-top:40vh;
+            z-index:999999;">
+  🚫 Desactiva tu bloqueador de anuncios para continuar
+</div>
+
+<script>
+// Detectar navegador
+function getBrowser() {
+    const ua = navigator.userAgent.toLowerCase();
+    if (navigator.brave) return "brave";
+    if (ua.includes("firefox")) return "firefox";
+    if (ua.includes("chrome") && !ua.includes("edg")) return "chrome";
+    return "otro";
+}
+
+// Detectar bloqueador REAL
+function detectAdblock() {
+    return new Promise(resolve => {
+        let url = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+        let test = document.createElement("script");
+        test.src = url;
+
+        // Si tarda mucho, seguramente está bloqueado
+        let timer = setTimeout(() => resolve(true), 1000);
+
+        test.onload = () => {
+            clearTimeout(timer);
+            resolve(false);
+        };
+
+        test.onerror = () => {
+            clearTimeout(timer);
+            resolve(true);
+        };
+
+        document.body.appendChild(test);
+    });
+}
+
+// Lógica final
 (async () => {
+    const browser = getBrowser();
+    const adblock = await detectAdblock();
 
-    // Detectar Brave correctamente
-    const isBrave = await (async () => {
-        if (!navigator.brave) return false;
-        try {
-            return await navigator.brave.isBrave();
-        } catch {
-            return true;
-        }
-    })();
+    console.log("Navegador:", browser);
+    console.log("Bloqueador:", adblock);
 
-    // Si NO es Brave → permitir TODO
-    if (!isBrave) return;
+    // Chrome permitido SIEMPRE
+    if (browser === "chrome") return;
 
-    // Si es Brave → bloquear pantalla
-    bloquearPantalla();
-
-    function bloquearPantalla(){
-        document.documentElement.innerHTML = "";
-
-        const div = document.createElement("div");
-        div.style.cssText = `
-            position:fixed;
-            top:0;
-            left:0;
-            width:100vw;
-            height:100vh;
-            background:#000;
-            color:#fff;
-            display:flex;
-            flex-direction:column;
-            justify-content:center;
-            align-items:center;
-            text-align:center;
-            z-index:99999999;
-            font-family:sans-serif;
-            padding:20px;
-        `;
-
-        div.innerHTML = `
-            <h1 style="font-size:28px;margin-bottom:15px;">🦁 Navegador Brave Detectado</h1>
-            <p>Desactiva Brave Shields para continuar.</p>
-            <button onclick="location.reload()" style="
-                margin-top:25px;
-                padding:12px 18px;
-                background:red;
-                border:none;
-                color:white;
-                font-size:18px;
-                border-radius:8px;
-            ">Reintentar</button>
-        `;
-
-        document.body.appendChild(div);
+    // Brave o Firefox → bloquear si tiene adblock
+    if ((browser === "brave" || browser === "firefox") && adblock) {
+        document.getElementById("adblockOverlay").style.display = "block";
     }
-
 })();
-		</script>
+</script>
 		
 </body>
                                                                    </html>
