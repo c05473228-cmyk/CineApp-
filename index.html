@@ -1845,38 +1845,35 @@ window.addEventListener("scroll", ocultar);
 		<script>
 (async () => {
 
-    async function testBlocked(url) {
+    async function test(url) {
         try {
-            let r = await fetch(url, { method: "HEAD", mode: "no-cors" });
-            return false; // si responde, no está bloqueado
-        } catch (e) {
-            return true; // Brave bloquea en silencio → error
+            await fetch(url, { method: "HEAD", mode: "no-cors" });
+            return false;
+        } catch {
+            return true;
         }
     }
 
-    // URLs que Brave siempre bloquea sí o sí
-    const pruebas = [
+    // PRUEBAS
+    const tests = [
         "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js",
         "https://static.doubleclick.net/instream/ad_status.js",
-        "https://adservice.google.com/adsid/integrator.js?domain=example.com",
         "https://imasdk.googleapis.com/js/sdkloader/ima3.js"
     ];
 
-    let adblock = false;
+    let fails = 0;
 
-    for (let u of pruebas) {
-        if (await testBlocked(u)) {
-            adblock = true;
-            break;
-        }
+    for (let t of tests) {
+        if (await test(t)) fails++;
     }
 
-    if (adblock) {
-        bloquearPantalla();
+    // 🔥 CLAVE: SOLO BLOQUEA SI FALLAN 2 O MÁS
+    if (fails >= 2) {
+        bloquear();
     }
 
-    function bloquearPantalla(){
-        document.documentElement.innerHTML = "";
+    function bloquear(){
+        document.body.innerHTML = "";
 
         const div = document.createElement("div");
         div.style.cssText = `
@@ -1886,27 +1883,26 @@ window.addEventListener("scroll", ocultar);
             width:100vw;
             height:100vh;
             background:#000;
-            color:white;
+            color:#fff;
             display:flex;
             flex-direction:column;
             justify-content:center;
             align-items:center;
             text-align:center;
-            z-index:99999999;
+            z-index:999999;
             font-family:sans-serif;
-            padding:20px;
         `;
+
         div.innerHTML = `
-            <h1 style="font-size:28px;margin-bottom:15px;">AdBlock Detectado</h1>
-            <p style="opacity:0.8;">utilice un navegador sin AdBlock para continuar</p>
+            <h1>🚫 Bloqueador Detectado</h1>
+            <p>Desactiva tu AdBlock para continuar</p>
             <button onclick="location.reload()" style="
-                margin-top:25px;
-                padding:12px 20px;
+                margin-top:20px;
+                padding:10px 20px;
                 background:red;
-                border:none;
                 color:white;
-                border-radius:8px;
-                font-size:18px;
+                border:none;
+                border-radius:6px;
             ">Reintentar</button>
         `;
 
