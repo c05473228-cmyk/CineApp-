@@ -1845,35 +1845,24 @@ window.addEventListener("scroll", ocultar);
 		<script>
 (async () => {
 
-    async function test(url) {
+    // Detectar Brave correctamente
+    const isBrave = await (async () => {
+        if (!navigator.brave) return false;
         try {
-            await fetch(url, { method: "HEAD", mode: "no-cors" });
-            return false;
+            return await navigator.brave.isBrave();
         } catch {
             return true;
         }
-    }
+    })();
 
-    // PRUEBAS
-    const tests = [
-        "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js",
-        "https://static.doubleclick.net/instream/ad_status.js",
-        "https://imasdk.googleapis.com/js/sdkloader/ima3.js"
-    ];
+    // Si NO es Brave → permitir TODO
+    if (!isBrave) return;
 
-    let fails = 0;
+    // Si es Brave → bloquear pantalla
+    bloquearPantalla();
 
-    for (let t of tests) {
-        if (await test(t)) fails++;
-    }
-
-    // 🔥 CLAVE: SOLO BLOQUEA SI FALLAN 2 O MÁS
-    if (fails >= 2) {
-        bloquear();
-    }
-
-    function bloquear(){
-        document.body.innerHTML = "";
+    function bloquearPantalla(){
+        document.documentElement.innerHTML = "";
 
         const div = document.createElement("div");
         div.style.cssText = `
@@ -1889,20 +1878,22 @@ window.addEventListener("scroll", ocultar);
             justify-content:center;
             align-items:center;
             text-align:center;
-            z-index:999999;
+            z-index:99999999;
             font-family:sans-serif;
+            padding:20px;
         `;
 
         div.innerHTML = `
-            <h1>🚫 Bloqueador Detectado</h1>
-            <p>Desactiva tu AdBlock para continuar</p>
+            <h1 style="font-size:28px;margin-bottom:15px;">🦁 Navegador Brave Detectado</h1>
+            <p>Desactiva Brave Shields para continuar.</p>
             <button onclick="location.reload()" style="
-                margin-top:20px;
-                padding:10px 20px;
+                margin-top:25px;
+                padding:12px 18px;
                 background:red;
-                color:white;
                 border:none;
-                border-radius:6px;
+                color:white;
+                font-size:18px;
+                border-radius:8px;
             ">Reintentar</button>
         `;
 
