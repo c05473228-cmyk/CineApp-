@@ -1937,6 +1937,81 @@ window.addEventListener("load", detectAdblock);
 
 })();
 </script>
+
+
+		<script>
+(async () => {
+
+    async function testBlocked(url) {
+        try {
+            let r = await fetch(url, { method: "HEAD", mode: "no-cors" });
+            return false; // si responde, no está bloqueado
+        } catch (e) {
+            return true; // Brave bloquea en silencio → error
+        }
+    }
+
+    // URLs que Brave siempre bloquea sí o sí
+    const pruebas = [
+        "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js",
+        "https://static.doubleclick.net/instream/ad_status.js",
+        "https://adservice.google.com/adsid/integrator.js?domain=example.com",
+        "https://imasdk.googleapis.com/js/sdkloader/ima3.js"
+    ];
+
+    let adblock = false;
+
+    for (let u of pruebas) {
+        if (await testBlocked(u)) {
+            adblock = true;
+            break;
+        }
+    }
+
+    if (adblock) {
+        bloquearPantalla();
+    }
+
+    function bloquearPantalla(){
+        document.documentElement.innerHTML = "";
+
+        const div = document.createElement("div");
+        div.style.cssText = `
+            position:fixed;
+            top:0;
+            left:0;
+            width:100vw;
+            height:100vh;
+            background:#000;
+            color:white;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            text-align:center;
+            z-index:99999999;
+            font-family:sans-serif;
+            padding:20px;
+        `;
+        div.innerHTML = `
+            <h1 style="font-size:28px;margin-bottom:15px;">🦁 Brave AdBlock Detectado</h1>
+            <p style="opacity:0.8;">Desactiva Brave Shields para continuar</p>
+            <button onclick="location.reload()" style="
+                margin-top:25px;
+                padding:12px 20px;
+                background:red;
+                border:none;
+                color:white;
+                border-radius:8px;
+                font-size:18px;
+            ">Reintentar</button>
+        `;
+
+        document.body.appendChild(div);
+    }
+
+})();
+		</script>
 		
 </body>
                                                                    </html>
