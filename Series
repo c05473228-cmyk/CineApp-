@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Serie - CineApp</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0b0b0f;
+  color: white;
+}
+
+/* PORTADA */
+.serie-header {
+  position: relative;
+  height: 65vh;
+  display: flex;
+  align-items: flex-end;
+  padding: 25px;
+}
+
+.serie-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  top: 0;
+  left: 0;
+  z-index: -2;
+}
+
+.serie-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, #0b0b0f, transparent 60%);
+  z-index: -1;
+}
+
+.serie-info {
+  max-width: 550px;
+}
+
+.serie-title {
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.serie-meta {
+  display: flex;
+  align-items: center;
+  opacity: 0.8;
+  margin-bottom: 10px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  margin: 0 10px;
+}
+
+.serie-desc {
+  opacity: 0.9;
+  line-height: 1.4;
+  margin-top: 5px;
+}
+
+/* TEMPORADAS */
+.seasons {
+  padding: 20px;
+  margin-top: 10px;
+}
+
+#seasonSelector {
+  width: 100%;
+  padding: 12px;
+  background: #171717;
+  color: white;
+  border: 1px solid #333;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+/* EPISODIOS */
+.episodes {
+  padding: 20px;
+}
+
+.episode-card {
+  background: #111;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.episode-card:hover {
+  transform: scale(1.01);
+}
+
+.episode-card img {
+  width: 150px;
+  height: 90px;
+  object-fit: cover;
+}
+
+.episode-info {
+  padding: 10px;
+}
+
+.episode-info h3 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.episode-info p {
+  opacity: 0.7;
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+/* PLAYER */
+#playerOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  display: none;
+  z-index: 99999;
+  flex-direction: column;
+}
+
+#playerFrame {
+  width: 100%;
+  height: 90%;
+  border: none;
+  background: black;
+}
+
+#closePlayer {
+  width: 100%;
+  background: red;
+  color: white;
+  padding: 14px;
+  border: none;
+  font-size: 18px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PORTADA -->
+<div class="serie-header">
+    <img src="URL_DE_LA_PORTADA" class="serie-bg">
+    <div class="serie-overlay"></div>
+
+    <div class="serie-info">
+        <h1 class="serie-title">Nombre de la Serie</h1>
+
+        <div class="serie-meta">
+            <span>2024</span>
+            <span class="dot"></span>
+            <span>1 Temporada</span>
+            <span class="dot"></span>
+            <span>Acción</span>
+        </div>
+
+        <p class="serie-desc">
+            Aquí va la descripción oficial de tu serie.
+        </p>
+    </div>
+</div>
+
+<!-- TEMPORADAS -->
+<div class="seasons">
+    <h2>Temporadas</h2>
+    <select id="seasonSelector">
+        <option value="1">Temporada 1</option>
+        <option value="2">Temporada 2</option>
+    </select>
+</div>
+
+<!-- EPISODIOS -->
+<div id="episodesContainer" class="episodes"></div>
+
+<!-- REPRODUCTOR -->
+<div id="playerOverlay">
+    <button id="closePlayer">Cerrar Reproductor</button>
+    <iframe id="playerFrame" allowfullscreen></iframe>
+</div>
+
+<script>
+/* ================================
+        EPISODIOS + VIDEOS
+=================================== */
+
+const episodesData = {
+    1: [
+        {
+            title: "Episodio 1 - Inicio",
+            desc: "Comienza la aventura.",
+            img: "URL_IMG_EP1",
+            video: "URL_VIDEO_EP1"
+        },
+        {
+            title: "Episodio 2 - Misterio",
+            desc: "Algo extraño sucede.",
+            img: "URL_IMG_EP2",
+            video: "URL_VIDEO_EP2"
+        }
+    ],
+    2: [
+        {
+            title: "Episodio 1 - Regreso",
+            desc: "Nueva temporada, nuevos problemas.",
+            img: "URL_IMG_T2_EP1",
+            video: "URL_VIDEO_T2_EP1"
+        }
+    ]
+};
+
+
+/* ================================
+        CARGAR EPISODIOS
+=================================== */
+
+function loadEpisodes(season) {
+    const container = document.getElementById("episodesContainer");
+    container.innerHTML = "";
+
+    episodesData[season].forEach(ep => {
+        container.innerHTML += `
+            <div class="episode-card" onclick="openPlayer('${ep.video}')">
+                <img src="${ep.img}">
+                <div class="episode-info">
+                    <h3>${ep.title}</h3>
+                    <p>${ep.desc}</p>
+                </div>
+            </div>
+        `;
+    });
+}
+
+document.getElementById("seasonSelector").addEventListener("change", e => {
+    loadEpisodes(e.target.value);
+});
+
+/* ================================
+            PLAYER
+=================================== */
+
+function openPlayer(url) {
+    document.getElementById("playerFrame").src = url;
+    document.getElementById("playerOverlay").style.display = "flex";
+}
+
+document.getElementById("closePlayer").onclick = () => {
+    document.getElementById("playerFrame").src = "";
+    document.getElementById("playerOverlay").style.display = "none";
+};
+
+/* CARGAR TEMPORADA POR DEFECTO */
+loadEpisodes(1);
+</script>
+
+</body>
+</html>
