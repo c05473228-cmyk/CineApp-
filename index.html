@@ -1929,14 +1929,16 @@ function detectAdblock() {
 		</script>
 
 
-		<div id="promoBox" class="promo hidden">
+	<div id="promoBox" class="promo">
   <div class="promo-header">
-    <strong>Oferta especial</strong>
+    <strong>Promoción</strong>
     <button id="closePromo">✕</button>
   </div>
-  <p>Descubre nuestra promoción disponible hoy.</p>
+
+  <p>Mira esta oferta especial disponible ahora.</p>
+
   <a href="https://www.profitablecpmratenetwork.com/jyj8xk4ik?key=74c83aae8b09ea5a9d8b5e8e2c1b25f0" target="_blank" rel="noopener noreferrer">
-    Ver oferta
+    Ver ahora
   </a>
 </div>
 
@@ -1950,10 +1952,9 @@ function detectAdblock() {
   color:#fff;
   padding:14px;
   border-radius:12px;
-  box-shadow:0 10px 30px rgba(0,0,0,.3);
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
   z-index:9999;
 }
-.hidden{display:none;}
 .promo-header{
   display:flex;
   justify-content:space-between;
@@ -1979,18 +1980,9 @@ function detectAdblock() {
 </style>
 
 <script>
-const promo = document.getElementById("promoBox");
-const closeBtn = document.getElementById("closePromo");
-
-if(!localStorage.getItem("promoClosed")){
-  promo.classList.remove("hidden");
-}
-
-closeBtn.addEventListener("click", () => {
-  promo.classList.add("hidden");
-  localStorage.setItem("promoClosed", "1");
+document.getElementById("closePromo").addEventListener("click", function(){
+  document.getElementById("promoBox").style.display = "none";
 });
 </script>
-		
 </body>
                                                                    </html>
