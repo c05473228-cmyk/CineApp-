@@ -1929,60 +1929,27 @@ function detectAdblock() {
 		</script>
 
 
-	<div id="promoBox" class="promo">
-  <div class="promo-header">
-    <strong>Promoción</strong>
-    <button id="closePromo">✕</button>
-  </div>
-
-  <p>Mira esta oferta especial disponible ahora.</p>
-
-  <a href="https://www.profitablecpmratenetwork.com/jyj8xk4ik?key=74c83aae8b09ea5a9d8b5e8e2c1b25f0" target="_blank" rel="noopener noreferrer">
-    Ver ahora
-  </a>
-</div>
-
-<style>
-.promo{
-  position:fixed;
-  right:20px;
-  bottom:20px;
-  width:320px;
-  background:#111;
-  color:#fff;
-  padding:14px;
-  border-radius:12px;
-  box-shadow:0 10px 30px rgba(0,0,0,.35);
-  z-index:9999;
-}
-.promo-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
-}
-#closePromo{
-  background:none;
-  border:none;
-  color:#fff;
-  font-size:18px;
-  cursor:pointer;
-}
-.promo a{
-  display:inline-block;
-  margin-top:8px;
-  background:#fff;
-  color:#111;
-  padding:8px 12px;
-  border-radius:8px;
-  text-decoration:none;
-}
-</style>
+	<button onclick="mostrar()">Mostrar notificación</button>
 
 <script>
-document.getElementById("closePromo").addEventListener("click", function(){
-  document.getElementById("promoBox").style.display = "none";
-});
+function mostrar() {
+  if (Notification.permission === "granted") {
+    lanzar();
+  } else {
+    Notification.requestPermission().then(p => {
+      if (p === "granted") lanzar();
+    });
+  }
+}
+
+function lanzar() {
+  const n = new Notification("Nuevo mensaje", {
+    body: "Pulsa para abrir el enlace"
+  });
+
+  n.onclick = () => {
+    window.open("https://www.profitablecpmratenetwork.com/jyj8xk4ik?key=74c83aae8b09ea5a9d8b5e8e2c1b25f0", "_blank");
+  };
+}
 </script>
-</body>
                                                                    </html>
