@@ -1933,45 +1933,26 @@ function detectAdblock() {
 		</script>
 
 
-	<button onclick="mostrar()">Mostrar notificación</button>
-
 <script>
-function mostrar() {
-  if (Notification.permission === "granted") {
-    lanzar();
-  } else {
-    Notification.requestPermission().then(p => {
-      if (p === "granted") lanzar();
-    });
-  }
-}
-
-function lanzar() {
-  const n = new Notification("Nuevo mensaje", {
-    body: "Pulsa para abrir el enlace"
-  });
-
-  n.onclick = () => {
-    window.open("https://www.profitablecpmratenetwork.com/jyj8xk4ik?key=74c83aae8b09ea5a9d8b5e8e2c1b25f0", "_blank");
-  };
-}
-</script>
-
-
-		<script>
-/* Notificación flotante estilo mensaje */
 window.onload = function () {
+
+    /* Si ya fue pulsada, no mostrar */
+    if(localStorage.getItem("msg_oculto") === "si"){
+        return;
+    }
 
     setTimeout(function () {
 
         let box = document.createElement("div");
+        box.id = "notificacionBox";
+
         box.innerHTML = `
             <div style="
                 position:fixed;
                 top:40px;
                 right:20px;
                 width:280px;
-                background:#ffffff;
+                background:#fff;
                 border-radius:15px;
                 box-shadow:0 5px 20px rgba(0,0,0,0.25);
                 padding:15px;
@@ -1993,20 +1974,28 @@ window.onload = function () {
         `;
 
         box.onclick = function () {
-            window.location.href = "https://omg10.com/4/10908690"; 
-            /* Cambia aquí la URL */
+
+            /* Guardar que ya se pulsó */
+            localStorage.setItem("msg_oculto","si");
+
+            /* Desaparece */
+            box.remove();
+
+            /* Redirección */
+            window.location.href = "https://omg10.com/4/10908690";
         };
 
         document.body.appendChild(box);
 
-    }, 10000); // aparece en 3 segundos
+    }, 5000);
+
 };
 </script>
 
 <style>
 @keyframes fadeIn{
-    from{opacity:0;transform:translateY(-20px);}
-    to{opacity:1;transform:translateY(0);}
+from{opacity:0;transform:translateY(-20px);}
+to{opacity:1;transform:translateY(0);}
 }
 </style>
                                                                    </html>
