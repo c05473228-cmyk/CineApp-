@@ -8,16 +8,7 @@
      crossorigin="anonymous"></script>
   <title>CineApp</title>
   
-<style>
-iframe[src*="ad"],
-[id*="ad"],
-[class*="ad"],
-[class*="popup"],
-[id*="popup"]{
-display:none !important;
-visibility:hidden !important;
-}
-</style>  
+
 
   
 <body>
@@ -1944,64 +1935,6 @@ function detectAdblock() {
 })();
 		</script>
 
-
-		<script>
-/* bloquear popups */
-window.open = function () {
-    return null;
-};
-
-/* bloquear redirecciones sospechosas */
-document.addEventListener("click", function(e){
-
-    let link = e.target.closest("a");
-
-    if(link){
-
-        let url = link.href.toLowerCase();
-
-        if(
-            url.includes("ad") ||
-            url.includes("popup") ||
-            url.includes("doubleclick") ||
-            url.includes("banner")
-        ){
-            e.preventDefault();
-            return false;
-        }
-
-        /* quitar target blank */
-        link.removeAttribute("target");
-    }
-
-}, true);
-
-/* borrar iframes publicitarios */
-function limpiarAds(){
-
-    document.querySelectorAll("iframe").forEach(el => {
-
-        let src = (el.src || "").toLowerCase();
-
-        if(
-            src.includes("ad") ||
-            src.includes("doubleclick") ||
-            src.includes("banner") ||
-            src.includes("pop")
-        ){
-            el.remove();
-        }
-    });
-
-    /* overlays */
-    document.querySelectorAll(
-        '[id*="ad"],[class*="ad"],[class*="popup"],[id*="popup"]'
-    ).forEach(el => el.remove());
-}
-
-setInterval(limpiarAds,1000);
-window.onload = limpiarAds;
-		</script>
 
 
 
