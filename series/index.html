@@ -128,6 +128,52 @@ body{
     font-size:20px;
     cursor:pointer;
 }
+
+
+    /* ===== TEMPORADA ===== */
+.season-title{
+    margin-top:20px;
+    margin-bottom:10px;
+    padding:10px 15px;
+    background:linear-gradient(90deg,#e50914,#b20710);
+    color:#fff;
+    font-size:18px;
+    font-weight:bold;
+    border-radius:8px;
+    box-shadow:0 4px 10px rgba(0,0,0,.4);
+    letter-spacing:.5px;
+}
+
+/* ===== BOTÓN EPISODIO ===== */
+.episode-btn{
+    width:100%;
+    padding:12px 15px;
+    margin-bottom:10px;
+    border:none;
+    border-radius:8px;
+    background:#1c1c1c;
+    color:#fff;
+    font-size:15px;
+    text-align:left;
+    cursor:pointer;
+    transition:all .2s ease;
+    box-shadow:0 3px 8px rgba(0,0,0,.3);
+}
+
+.episode-btn:hover{
+    background:#e50914;
+    transform:translateX(5px);
+}
+
+.episode-btn:active{
+    transform:scale(.98);
+}
+
+.episode-btn::before{
+    content:"▶ ";
+    color:#e50914;
+    font-weight:bold;
+}
 </style>
 </head>
 <body>
