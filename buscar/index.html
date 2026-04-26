@@ -9,25 +9,7 @@
 
 <style>
 
-/* ===== GENERAL ===== */
-body{
-    margin:0;
-    background:#000;
-    font-family:Arial, Helvetica, sans-serif;
-    color:white;
-}
-
-/* BOTÓN MENU */
-.nav__link{
-    color:white;
-    text-decoration:none;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:15px;
-}
-
-/* ===== OVERLAY ===== */
+/* PANEL */
 #searchOverlay{
     position:fixed;
     top:0;
@@ -40,14 +22,14 @@ body{
     padding:15px;
 }
 
-/* HEADER */
+/* CABECERA */
 .search-header{
     display:flex;
     align-items:center;
     gap:12px;
 }
 
-/* BOTÓN ATRÁS */
+/* FLECHA */
 .back-btn{
     color:white;
     font-size:28px;
@@ -65,11 +47,6 @@ body{
     padding:0 18px;
 }
 
-/* ICONOS */
-.search-box span{
-    color:#888;
-}
-
 /* INPUT */
 .search-box input{
     flex:1;
@@ -81,8 +58,9 @@ body{
     margin-left:10px;
 }
 
-.search-box input::placeholder{
-    color:#777;
+/* ICONOS */
+.search-box span{
+    color:#888;
 }
 
 /* MENSAJE */
@@ -98,10 +76,10 @@ body{
 </head>
 <body>
 
-<!-- BOTÓN BUSCAR -->
+<!-- BOTÓN BUSCADOR -->
 <a href="javascript:void(0)" class="nav__link" onclick="abrirBuscador()">
     <span class="material-icons">search</span>
-    <span>Buscar</span>
+    <span class="nav__text">Buscar</span>
 </a>
 
 <!-- BUSCADOR -->
@@ -112,13 +90,15 @@ body{
         <span class="material-icons back-btn" onclick="cerrarBuscador()">arrow_back</span>
 
         <div class="search-box">
+
             <span class="material-icons">search</span>
 
-            <input 
+            <input
             type="text"
             id="searchInput"
-            placeholder="Buscar películas..."
+            placeholder="Buscar película..."
             onkeyup="filtrarTarjetas()">
+
         </div>
 
     </div>
@@ -127,31 +107,20 @@ body{
 
 </div>
 
-<!-- EJEMPLO TARJETAS -->
-<ul>
-
-<li class="TPostMv" data-title="Matrix Resurrections">🎬 Matrix Resurrections</li>
-
-<li class="TPostMv" data-title="Avatar 2">🎬 Avatar 2</li>
-
-<li class="TPostMv" data-title="John Wick 4">🎬 John Wick 4</li>
-
-<li class="TPostMv" data-title="The Batman">🎬 The Batman</li>
-
-</ul>
-
 <script>
 
+/* ABRIR */
 function abrirBuscador(){
     document.getElementById("searchOverlay").style.display="block";
     document.getElementById("searchInput").focus();
 }
 
+/* CERRAR */
 function cerrarBuscador(){
     document.getElementById("searchOverlay").style.display="none";
 }
 
-/* FILTRAR */
+/* FILTRAR TUS TARJETAS */
 function filtrarTarjetas(){
 
     let texto = document.getElementById("searchInput").value.toLowerCase();
@@ -162,13 +131,19 @@ function filtrarTarjetas(){
 
     tarjetas.forEach(function(card){
 
-        let nombre = card.getAttribute("data-title").toLowerCase();
+        let nombre = card.getAttribute("data-title");
 
-        if(nombre.includes(texto)){
-            card.style.display="block";
-            encontrados++;
-        }else{
-            card.style.display="none";
+        if(nombre){
+
+            nombre = nombre.toLowerCase();
+
+            if(nombre.includes(texto)){
+                card.style.display="block";
+                encontrados++;
+            }else{
+                card.style.display="none";
+            }
+
         }
 
     });
