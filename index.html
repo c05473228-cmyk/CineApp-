@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
  <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4283651068858155"
      crossorigin="anonymous"></script>
@@ -10,18 +11,82 @@
   
 
 
- <style> 
-.series-card{
-    min-width:160px;
-    height:95px;
-    border-radius:8px;
-    overflow:hidden;
-    background:#1a1a1a;
+<style>
+/* ===== RESPONSIVE GLOBAL ===== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-.series-card:hover{
-    transform:scale(1.05);
-    box-shadow:0 0 15px #9d00ff;
+html,body{
+    width:100%;
+    overflow-x:hidden;
+    font-family:Arial, sans-serif;
+    background:#000;
+    color:#fff;
+}
+
+/* Imágenes automáticas */
+img{
+    max-width:100%;
+    height:auto;
+    display:block;
+}
+
+/* Videos e iframe */
+iframe,video{
+    width:100%;
+    max-width:100%;
+    height:auto;
+}
+
+/* Contenedor principal */
+.container{
+    width:100%;
+    max-width:1200px;
+    margin:auto;
+    padding:15px;
+}
+
+/* Botones responsive */
+button{
+    max-width:100%;
+    padding:12px 20px;
+    font-size:16px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+/* Texto adaptable */
+h1,h2,h3{
+    font-size:clamp(20px,5vw,40px);
+}
+
+p{
+    font-size:clamp(14px,3vw,18px);
+}
+
+/* GRID automático */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:15px;
+}
+
+/* Para celulares */
+@media(max-width:768px){
+
+button{
+    width:100%;
+}
+
+body{
+    font-size:15px;
+}
+
 }
 </style>
 <body>
