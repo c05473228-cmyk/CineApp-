@@ -12,43 +12,7 @@
 
 
 <style>
-#searchOverlay{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    background:#0b0b0f;
-    display:none;
-    z-index:9999;
-    padding:15px;
-}
 
-.search-box{
-    background:#181818;
-    border-radius:14px;
-    display:flex;
-    align-items:center;
-    padding:0 15px;
-    height:55px;
-}
-
-.search-box input{
-    flex:1;
-    background:none;
-    border:none;
-    outline:none;
-    color:white;
-    font-size:16px;
-    margin:0 10px;
-}
-
-.search-box span{
-    color:#888;
-}
-
-.closeSearch{
-    cursor:pointer;
-}
 
 
 
@@ -1988,46 +1952,7 @@ function detectAdblock() {
 })();
 		</script>
 
-		<script>
-
-function abrirBuscador(){
-    document.getElementById("searchOverlay").style.display="block";
-    document.getElementById("searchInput").focus();
-}
-
-function cerrarBuscador(){
-    document.getElementById("searchOverlay").style.display="none";
-}
-
-function filtrarTarjetas(){
-
-    let texto = document.getElementById("searchInput").value.toLowerCase();
-
-    let tarjetas = document.querySelectorAll(".TPostMv");
-
-    tarjetas.forEach(function(card){
-
-        let nombre = card.getAttribute("data-title").toLowerCase();
-
-        if(nombre.includes(texto)){
-            card.style.display = "block";
-        }else{
-            card.style.display = "none";
-        }
-
-    });
-
-}
-
-		</script>
-
- <div id="searchOverlay">
-    <div class="search-box">
-        <span class="material-icons">search</span>
-        <input type="text" id="searchInput" placeholder="Buscar película..." onkeyup="filtrarTarjetas()">
-        <span class="material-icons closeSearch" onclick="cerrarBuscador()">close</span>
-    </div>
- </div>
+		
 	</body>
 		
     </html>
