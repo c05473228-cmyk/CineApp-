@@ -1745,80 +1745,8 @@ body {
 
 </style>
 
-<script>
-window.addEventListener("load", () => {
 
-// === CREA EL BUSCADOR ===
-const overlay = document.createElement("div");
-overlay.id = "searchOverlay";
-overlay.style = `
-position:fixed;
-top:0; left:0;
-width:100vw; height:100vh;
-background:black;
-display:none;
-z-index:999999;
-padding:20px;
-`;
-
-overlay.innerHTML = `
-<input id="searchInput" placeholder="Buscar..." style="
-width:100%; padding:15px;
-font-size:18px; border:none;
-border-radius:8px; outline:none;">
-<div id="searchResults" style="margin-top:20px;"></div>
-`;
-
-document.body.appendChild(overlay);
-
-
-// === ABRIR BUSCADOR ===
-document.body.addEventListener("click", e => {
-    const btn = e.target.closest("a");
-    if (!btn) return;
-
-    if (btn.getAttribute("href") === "http://action_search") {
-        e.preventDefault();
-        overlay.style.display = "block";
-        document.getElementById("searchInput").focus();
-    }
-});
-
-// === CERRAR ===
-overlay.addEventListener("click", e => {
-    if (e.target === overlay) overlay.style.display = "none";
-});
-
-// === BUSCAR ===
-document.addEventListener("input", e => {
-    if (e.target.id !== "searchInput") return;
-
-    const texto = e.target.value.toLowerCase();
-    let html = "";
-
-    const cards = document.querySelectorAll("[data-title]");
-
-    cards.forEach(card => {
-        const titulo = card.getAttribute("data-title");
-        const link = card.querySelector("a")?.href;
-
-        if (!titulo || !link) return;
-
-        if (titulo.toLowerCase().includes(texto)) {
-            html += `
-            <div onclick="location.href='${link}'"
-                style="padding:12px; border-bottom:1px solid #333; cursor:pointer;">
-                ${titulo}
-            </div>`;
-        }
-    });
-
-    document.getElementById("searchResults").innerHTML =
-        html || `<div style="padding:12px;">Sin resultados</div>`;
-});
-
-});
-</script>
+        
 
 
 <style>
