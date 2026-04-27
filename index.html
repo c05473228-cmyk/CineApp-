@@ -2122,15 +2122,29 @@ caja.innerHTML = "";
 
 let encontrados = 0;
 
+/* guardar nombres ya mostrados */
+let usados = [];
+
 tarjetas.forEach(function(card){
 
 let nombre = card.getAttribute("data-title");
 
-if(nombre && nombre.toLowerCase().includes(texto)){
+if(nombre){
+
+let titulo = nombre.toLowerCase();
+
+if(
+titulo.includes(texto) &&
+!usados.includes(titulo)
+){
 
 caja.innerHTML += card.outerHTML;
 
+usados.push(titulo);
+
 encontrados++;
+
+}
 
 }
 
