@@ -2046,6 +2046,68 @@ function detectAdblock() {
 </div>
 
 
+
+		<script>
+
+/* ABRIR */
+function abrirBuscador(){
+
+document.getElementById("searchOverlay").style.display = "block";
+
+document.getElementById("searchInput").focus();
+
+}
+
+/* CERRAR */
+function cerrarBuscador(){
+
+document.getElementById("searchOverlay").style.display = "none";
+
+document.getElementById("searchInput").value = "";
+
+document.getElementById("searchResults").innerHTML = "";
+
+document.getElementById("noResults").style.display = "none";
+
+}
+
+/* FILTRAR */
+function filtrarTarjetas(){
+
+let texto = document.getElementById("searchInput").value.toLowerCase();
+
+let tarjetas = document.querySelectorAll(".TPostMv");
+
+let caja = document.getElementById("searchResults");
+
+caja.innerHTML = "";
+
+let encontrados = 0;
+
+tarjetas.forEach(function(card){
+
+let nombre = card.getAttribute("data-title");
+
+if(nombre && nombre.toLowerCase().includes(texto)){
+
+caja.innerHTML += card.outerHTML;
+
+encontrados++;
+
+}
+
+});
+
+if(encontrados == 0){
+document.getElementById("noResults").style.display = "block";
+}else{
+document.getElementById("noResults").style.display = "none";
+}
+
+}
+
+		</script>
+
 		<script>
 
 function filtrarTarjetas(){
