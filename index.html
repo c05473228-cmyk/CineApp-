@@ -61,6 +61,20 @@
     color:#888;
 }
 
+
+#searchResults{
+    margin-top:20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+    gap:15px;
+    overflow-y:auto;
+    max-height:80vh;
+}
+
+#searchResults .TPostMv{
+    display:block !important;
+}
+
 #noResults{
     display:none;
     text-align:center;
@@ -2006,8 +2020,7 @@ function detectAdblock() {
 		</script>
 
 
-
-		<div id="searchOverlay">
+<div id="searchOverlay">
 
     <div class="search-header">
 
@@ -2027,43 +2040,45 @@ function detectAdblock() {
 
     <div id="noResults">No se encontraron resultados</div>
 
-		</div>
+    <!-- RESULTADOS -->
+    <div id="searchResults"></div>
+
+</div>
 
 
 		<script>
 
-function abrirBuscador(){
-    document.getElementById("searchOverlay").style.display="block";
-    document.getElementById("searchInput").focus();
-}
-
-function cerrarBuscador(){
-    document.getElementById("searchOverlay").style.display="none";
-}
-
 function filtrarTarjetas(){
 
-    let texto = document.getElementById("searchInput").value.toLowerCase();
+let texto = document.getElementById("searchInput").value.toLowerCase();
 
-    let tarjetas = document.querySelectorAll(".TPostMv");
+let tarjetas = document.querySelectorAll(".TPostMv");
 
-    let encontrados = 0;
+let caja = document.getElementById("searchResults");
 
-    tarjetas.forEach(function(card){
+caja.innerHTML = "";
 
-        let nombre = card.getAttribute("data-title");
+let encontrados = 0;
 
-        if(nombre && nombre.toLowerCase().includes(texto)){
-            card.style.display="block";
-            encontrados++;
-        }else{
-            card.style.display="none";
-        }
+tarjetas.forEach(function(card){
 
-    });
+let nombre = card.getAttribute("data-title");
 
-    document.getElementById("noResults").style.display =
-    encontrados == 0 ? "block" : "none";
+if(nombre && nombre.toLowerCase().includes(texto)){
+
+caja.innerHTML += card.outerHTML;
+
+encontrados++;
+
+}
+
+});
+
+if(encontrados == 0){
+document.getElementById("noResults").style.display="block";
+}else{
+document.getElementById("noResults").style.display="none";
+}
 
 }
 
