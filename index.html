@@ -210,7 +210,7 @@ margin-bottom:15px;
 
 .categories{
 display:grid;
-grid-template-columns:1fr 1fr;
+min-width:max-content;
 gap:18px;
 }
 
@@ -662,12 +662,25 @@ cursor:pointer;
 }
 
 .trending-grid{
+display:flex;
+gap:20px;
+overflow-x:auto;
+scroll-behavior:smooth;
+padding-bottom:10px;
+}
+
+.trending-grid::-webkit-scrollbar{
+display:none;
+}
+
+
 display:grid;
-grid-template-columns:1fr 1fr;
+min-width:max-content;
 gap:20px;
 }
 
 .trend-card{
+min-width:340px;
 background:#171717;
 padding:12px;
 border-radius:22px;
@@ -869,12 +882,25 @@ cursor:pointer;
 }
 
 .released-grid{
+display:flex;
+gap:20px;
+overflow-x:auto;
+scroll-behavior:smooth;
+padding-bottom:10px;
+}
+
+.released-grid::-webkit-scrollbar{
+display:none;
+}
+
+
 display:grid;
-grid-template-columns:1fr 1fr;
+min-width:max-content;
 gap:20px;
 }
 
 .released-card{
+min-width:340px;
 background:#171717;
 padding:12px;
 border-radius:20px;
@@ -1021,6 +1047,39 @@ flex-wrap:wrap;
 </style>
 
 <script>
+
+// CARRUSEL TRENDING
+const trendingGrid=document.querySelector('.trending-grid');
+const releasedGrid=document.querySelector('.released-grid');
+
+const sliderButtons=document.querySelectorAll('.slider-buttons button');
+
+sliderButtons.forEach((btn,index)=>{
+btn.addEventListener('click',()=>{
+const direction=index===0?-1:1;
+releasedGrid.scrollBy({
+left:direction*350,
+behavior:'smooth'
+});
+});
+});
+
+// AUTOSCROLL TRENDING
+let trendPosition=0;
+
+setInterval(()=>{
+trendPosition+=1;
+
+if(trendPosition>trendingGrid.scrollWidth-trendingGrid.clientWidth){
+trendPosition=0;
+}
+
+trendingGrid.scrollTo({
+left:trendPosition,
+behavior:'smooth'
+});
+},40);
+
 let sec=51;
 let min=41;
 let hrs=13;
