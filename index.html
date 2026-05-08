@@ -1156,4 +1156,39 @@ document.getElementById('seconds').innerText=sec;
 </script>
 
 
+  
+<script>
+const releasedGrid = document.querySelector('.released-grid');
+
+releasedGrid.style.display = 'flex';
+releasedGrid.style.gap = '18px';
+releasedGrid.style.overflowX = 'auto';
+releasedGrid.style.scrollBehavior = 'smooth';
+releasedGrid.style.paddingBottom = '10px';
+releasedGrid.style.webkitOverflowScrolling = 'touch';
+releasedGrid.style.scrollSnapType = 'x mandatory';
+
+document.querySelectorAll('.released-card').forEach(card=>{
+
+card.style.flex = '0 0 auto';
+card.style.width = '220px';
+card.style.background = '#171717';
+card.style.borderRadius = '20px';
+card.style.overflow = 'hidden';
+card.style.scrollSnapAlign = 'start';
+
+const img = card.querySelector('img');
+
+if(img){
+img.style.width = '100%';
+img.style.height = '300px';
+img.style.objectFit = 'cover';
+img.style.display = 'block';
+}
+
+});
+</script>
+
+
+
 
