@@ -1,250 +1,530 @@
+# Aplicación estilo Vivid/Anime Streaming (HTML + CSS + JS)
+
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mi Prime App</title>
+<title>Vivid Anime</title>
 
 <style>
 *{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Arial, Helvetica, sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
 }
 
 body{
-  background:#0f171e;
-  color:white;
+background:#0d0d0d;
+color:white;
+overflow-x:hidden;
 }
 
-/* HEADER */
 header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px;
-  background:#0f171e;
+width:100%;
+padding:18px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+position:fixed;
+top:0;
+left:0;
+z-index:999;
+background:#0d0d0d;
+border-bottom:1px solid rgba(255,255,255,.06);
 }
 
-header h1{
-  color:#00a8e1;
+.logo{
+font-size:38px;
+font-weight:bold;
+color:#59f0b5;
 }
 
-input{
-  padding:8px;
-  border:none;
-  border-radius:5px;
-  width:200px;
+.menu-btn{
+font-size:32px;
+cursor:pointer;
 }
 
-/* CARRUSEL */
-.section{
-  margin:20px;
+.sidebar{
+position:fixed;
+top:0;
+right:-260px;
+width:260px;
+height:100vh;
+background:#151515;
+padding:25px;
+transition:.3s;
+z-index:1000;
 }
 
-.section h2{
-  margin-bottom:10px;
+.sidebar.active{
+right:0;
 }
 
-.carousel{
-  display:flex;
-  overflow-x:auto;
-  gap:10px;
+.sidebar h2{
+margin-bottom:20px;
+color:#59f0b5;
+}
+
+.sidebar a{
+display:block;
+color:white;
+text-decoration:none;
+margin-bottom:18px;
+font-size:18px;
+}
+
+.close-btn{
+font-size:28px;
+cursor:pointer;
+margin-bottom:20px;
+display:block;
+text-align:right;
+}
+
+.container{
+padding:90px 15px 30px;
+}
+
+.banner{
+position:relative;
+height:420px;
+border-radius:24px;
+overflow:hidden;
+margin-bottom:25px;
+}
+
+.banner img{
+width:100%;
+height:100%;
+object-fit:cover;
+filter:brightness(.45);
+}
+
+.banner-content{
+position:absolute;
+bottom:30px;
+left:25px;
+}
+
+.banner h1{
+font-size:42px;
+margin-bottom:10px;
+max-width:500px;
+}
+
+.tags{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:18px;
+}
+
+.tag{
+background:rgba(255,255,255,.12);
+padding:7px 13px;
+border-radius:20px;
+font-size:14px;
+}
+
+.buttons{
+display:flex;
+gap:15px;
+}
+
+.play-btn,.info-btn{
+border:none;
+padding:14px 28px;
+border-radius:14px;
+font-size:18px;
+cursor:pointer;
+}
+
+.play-btn{
+background:#59f0b5;
+color:black;
+font-weight:bold;
+}
+
+.info-btn{
+background:rgba(255,255,255,.12);
+color:white;
+}
+
+.search-box{
+margin-bottom:25px;
+}
+
+.search-box input{
+width:100%;
+padding:16px;
+background:#171717;
+border:none;
+border-radius:14px;
+color:white;
+font-size:16px;
+outline:none;
+}
+
+.cards{
+display:flex;
+flex-direction:column;
+gap:20px;
+margin-bottom:30px;
 }
 
 .card{
-  min-width:150px;
-  height:220px;
-  background:#222;
-  border-radius:10px;
-  cursor:pointer;
-  transition:0.3s;
-  position:relative;
-}
-
-.card img{
-  width:100%;
-  height:100%;
-  border-radius:10px;
-  object-fit:cover;
+display:flex;
+gap:15px;
+background:#171717;
+padding:15px;
+border-radius:20px;
+transition:.3s;
 }
 
 .card:hover{
-  transform:scale(1.1);
+transform:scale(1.02);
 }
 
-/* PLAYER */
-#player{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.9);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
+.card img{
+width:170px;
+height:120px;
+object-fit:cover;
+border-radius:14px;
 }
 
-#player iframe{
-  width:90%;
-  height:60%;
-  border:none;
+.card-content{
+flex:1;
 }
 
-#close{
-  position:absolute;
-  top:20px;
-  right:20px;
-  background:red;
-  padding:10px;
-  cursor:pointer;
-  border-radius:5px;
+.card-content h2{
+margin-bottom:10px;
 }
 
-/* BOTONES */
-.footer{
-  text-align:center;
-  margin:30px;
+.card-content p{
+opacity:.7;
+margin-bottom:15px;
 }
 
-button{
-  padding:10px 20px;
-  margin:5px;
-  border:none;
-  border-radius:5px;
-  cursor:pointer;
+.categories{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px;
 }
 
-.report{
-  background:#ff3b3b;
-  color:white;
+.category{
+background:#171717;
+border-radius:20px;
+padding:18px;
+display:flex;
+align-items:center;
+gap:15px;
+transition:.3s;
+cursor:pointer;
 }
 
-.share{
-  background:#25D366;
-  color:white;
+.category:hover{
+box-shadow:0 0 20px #59f0b5;
+border:1px solid #59f0b5;
+}
+
+.category img{
+width:75px;
+height:75px;
+object-fit:cover;
+border-radius:15px;
+}
+
+.category h3{
+margin-bottom:5px;
+}
+
+.category span{
+opacity:.7;
+}
+
+.player{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.9);
+display:none;
+justify-content:center;
+align-items:center;
+padding:20px;
+z-index:2000;
+}
+
+.player.active{
+display:flex;
+}
+
+.player-content{
+width:100%;
+max-width:900px;
+background:#111;
+padding:15px;
+border-radius:20px;
+position:relative;
+}
+
+.player iframe{
+width:100%;
+height:500px;
+border:none;
+border-radius:12px;
+}
+
+.close-player{
+position:absolute;
+right:15px;
+top:10px;
+font-size:28px;
+cursor:pointer;
+}
+
+.info-modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.9);
+display:none;
+justify-content:center;
+align-items:center;
+padding:20px;
+z-index:2000;
+}
+
+.info-modal.active{
+display:flex;
+}
+
+.info-box{
+background:#181818;
+padding:25px;
+border-radius:20px;
+max-width:500px;
+width:100%;
+}
+
+.info-box h2{
+margin-bottom:15px;
+}
+
+.info-box p{
+line-height:1.6;
+opacity:.8;
+margin-bottom:20px;
+}
+
+.info-box button{
+background:#59f0b5;
+color:black;
+border:none;
+padding:12px 25px;
+border-radius:12px;
+font-weight:bold;
+cursor:pointer;
+}
+
+@media(max-width:768px){
+.banner{
+height:320px;
+}
+
+.banner h1{
+font-size:28px;
+}
+
+.card{
+flex-direction:column;
+}
+
+.card img{
+width:100%;
+height:200px;
+}
+
+.categories{
+grid-template-columns:1fr;
+}
+
+.player iframe{
+height:230px;
+}
 }
 </style>
 </head>
-
 <body>
 
 <header>
-<h1>MiPrime</h1>
-<input type="text" id="search" placeholder="Buscar...">
+<div class="logo">Vivid</div>
+<div class="menu-btn" onclick="openMenu()">☰</div>
 </header>
 
-<!-- PELÍCULAS -->
-<div class="section">
-<h2>Películas</h2>
-<div class="carousel" id="movies"></div>
+<div class="sidebar" id="sidebar">
+<div class="close-btn" onclick="closeMenu()">✕</div>
+<h2>Menú</h2>
+<a href="#">Inicio</a>
+<a href="#">Animes</a>
+<a href="#">Series</a>
+<a href="#">Películas</a>
+<a href="#">Favoritos</a>
 </div>
 
-<!-- SERIES -->
-<div class="section">
-<h2>Series</h2>
-<div class="carousel" id="series"></div>
+<div class="container">
+
+<div class="search-box">
+<input type="text" id="search" placeholder="Buscar anime...">
 </div>
 
-<!-- PLAYER -->
-<div id="player">
-<div id="close" onclick="cerrar()">X</div>
-<iframe id="video"></iframe>
+<section class="banner">
+<img src="https://images6.alphacoders.com/119/1191374.jpg">
+
+<div class="banner-content">
+<h1>Demon Slayer: Kimetsu no Yaiba</h1>
+
+<div class="tags">
+<div class="tag">18+</div>
+<div class="tag">HD</div>
+<div class="tag">Anime</div>
+<div class="tag">2025</div>
 </div>
 
-<!-- BOTONES -->
-<div class="footer">
-<button class="report" onclick="reportar()">Reportar error</button>
-<button class="share" onclick="compartir()">Compartir</button>
+<div class="buttons">
+<button class="play-btn" onclick="playVideo('https://www.youtube.com/embed/VQGCKyvzIM4')">▶ Play</button>
+<button class="info-btn" onclick="showInfo()">ⓘ More Info</button>
+</div>
+</div>
+</section>
+
+<section class="cards" id="cards">
+
+<div class="card" data-title="My Hero Academia">
+<img src="https://i.pinimg.com/736x/7f/4f/07/7f4f0766748adfa0f508a403ef2e0e1f.jpg">
+<div class="card-content">
+<h2>My Hero Academia</h2>
+<p>2019 • 4 temporadas • Anime</p>
+<button class="play-btn" onclick="playVideo('https://www.youtube.com/embed/wIb3nnOeves')">▶ Play</button>
+</div>
+</div>
+
+<div class="card" data-title="Hells Paradise">
+<img src="https://wallpaperaccess.com/full/1122503.jpg">
+<div class="card-content">
+<h2>Hell's Paradise</h2>
+<p>2023 • Acción • Anime</p>
+<button class="play-btn" onclick="playVideo('https://www.youtube.com/embed/aaHZdwPZX6g')">▶ Play</button>
+</div>
+</div>
+
+<div class="card" data-title="Attack on Titan">
+<img src="https://images5.alphacoders.com/437/437985.jpg">
+<div class="card-content">
+<h2>Attack on Titan</h2>
+<p>Acción • Drama • Anime</p>
+<button class="play-btn" onclick="playVideo('https://www.youtube.com/embed/LV-nazLVmgo')">▶ Play</button>
+</div>
+</div>
+
+</section>
+
+<section class="categories">
+
+<div class="category">
+<img src="https://i.pinimg.com/736x/65/c9/6f/65c96f81ca9efc8f73cc2d1b5b2d6b94.jpg">
+<div>
+<h3>Shonen</h3>
+<span>850+ Animes</span>
+</div>
+</div>
+
+<div class="category">
+<img src="https://i.pinimg.com/736x/0f/98/8b/0f988bf6fd2f46f7bdbf6b4d6f4d58f2.jpg">
+<div>
+<h3>Action</h3>
+<span>850+ Animes</span>
+</div>
+</div>
+
+<div class="category">
+<img src="https://i.pinimg.com/736x/7e/ef/c5/7eefc5f4ab4c1b5c6a5eb66d9a3474d7.jpg">
+<div>
+<h3>Fantasy</h3>
+<span>850+ Animes</span>
+</div>
+</div>
+
+<div class="category">
+<img src="https://i.pinimg.com/736x/57/99/c0/5799c07f4d0e8a5f657cb93cb6cfad7d.jpg">
+<div>
+<h3>Romantic</h3>
+<span>850+ Animes</span>
+</div>
+</div>
+
+</section>
+
+</div>
+
+<div class="player" id="player">
+<div class="player-content">
+<div class="close-player" onclick="closePlayer()">✕</div>
+<iframe id="videoFrame" allowfullscreen></iframe>
+</div>
+</div>
+
+<div class="info-modal" id="infoModal">
+<div class="info-box">
+<h2>Demon Slayer</h2>
+<p>Tanjiro Kamado lucha contra demonios mientras busca una cura para su hermana Nezuko después de que su familia es asesinada.</p>
+<button onclick="closeInfo()">Cerrar</button>
+</div>
 </div>
 
 <script>
-// DATOS (puedes cambiar enlaces)
-const peliculas = [
-  {
-    titulo:"Película 1",
-    img:"https://via.placeholder.com/300x450",
-    link:"https://www.youtube.com/embed/dQw4w9WgXcQ"
-  },
-  {
-    titulo:"Película 2",
-    img:"https://via.placeholder.com/300x450",
-    link:"https://www.youtube.com/embed/tgbNymZ7vqY"
-  },
-  {
-    titulo:"Película 3",
-    img:"https://via.placeholder.com/300x450",
-    link:"https://www.youtube.com/embed/ysz5S6PUM-U"
-  }
-];
-
-const series = [
-  {
-    titulo:"Serie 1",
-    img:"https://via.placeholder.com/300x450",
-    link:"https://www.youtube.com/embed/dQw4w9WgXcQ"
-  },
-  {
-    titulo:"Serie 2",
-    img:"https://via.placeholder.com/300x450",
-    link:"https://www.youtube.com/embed/tgbNymZ7vqY"
-  }
-];
-
-// GENERAR TARJETAS
-function cargar(){
-  peliculas.forEach(p=>{
-    document.getElementById("movies").innerHTML += `
-      <div class="card" onclick="ver('${p.link}')">
-        <img src="${p.img}">
-      </div>
-    `;
-  });
-
-  series.forEach(s=>{
-    document.getElementById("series").innerHTML += `
-      <div class="card" onclick="ver('${s.link}')">
-        <img src="${s.img}">
-      </div>
-    `;
-  });
+function openMenu(){
+document.getElementById('sidebar').classList.add('active');
 }
 
-// REPRODUCTOR
-function ver(link){
-  document.getElementById("player").style.display="flex";
-  document.getElementById("video").src=link;
+function closeMenu(){
+document.getElementById('sidebar').classList.remove('active');
 }
 
-function cerrar(){
-  document.getElementById("player").style.display="none";
-  document.getElementById("video").src="";
+function playVideo(url){
+document.getElementById('player').classList.add('active');
+document.getElementById('videoFrame').src=url;
 }
 
-// BUSCADOR
-document.getElementById("search").addEventListener("input",function(){
-  let valor = this.value.toLowerCase();
-  let cards = document.querySelectorAll(".card");
+function closePlayer(){
+document.getElementById('player').classList.remove('active');
+document.getElementById('videoFrame').src='';
+}
 
-  cards.forEach(card=>{
-    card.style.display = card.innerText.toLowerCase().includes(valor) ? "block" : "none";
-  });
+function showInfo(){
+document.getElementById('infoModal').classList.add('active');
+}
+
+function closeInfo(){
+document.getElementById('infoModal').classList.remove('active');
+}
+
+const search=document.getElementById('search');
+const cards=document.querySelectorAll('.card');
+
+search.addEventListener('keyup',()=>{
+const value=search.value.toLowerCase();
+
+cards.forEach(card=>{
+const title=card.dataset.title.toLowerCase();
+
+if(title.includes(value)){
+card.style.display='flex';
+}else{
+card.style.display='none';
+}
 });
-
-// BOTONES
-function reportar(){
-  window.location.href="mailto:tucorreo@gmail.com";
-}
-
-function compartir(){
-  window.open("https://wa.me/?text=Mira%20esta%20app");
-}
-
-// INICIAR
-cargar();
+});
 </script>
 
 </body>
